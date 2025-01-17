@@ -73,3 +73,47 @@ void loadFlights()
 
             //Extract airline code from the first 2 characters of the flight number
             string airlineCode = flightNumber.Substring(0, 2);
+
+//While true loop (for future use)
+while (true)
+{
+    DisplayMenu();
+    int option = Convert.ToInt32(Console.ReadLine());
+    if (option == 1)
+    {
+        ListFlights();
+    }
+
+    else if (option == 2)
+    {
+        ListBoardingGates();
+    }
+    else if (option == 3)
+    {
+        AssignBoardingGate();
+    }
+    else if (option == 4)
+    {
+        CreateFlight();
+    }
+    else if (option == 5)
+    {
+        DisplayAirlineFlights();
+    }
+    else if (option == 6)
+    {
+        ModifyFlightDetails();
+    }
+    else if (option == 7)
+    {
+        DisplayFlightSchedule();
+    }
+    else if (option == 0)
+    {
+        break;
+    }
+    else
+    {
+        Console.WriteLine("Invalid option. Please try again.");
+    }
+}
