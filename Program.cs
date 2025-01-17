@@ -1,3 +1,4 @@
+//Display Menu (Completed)
 void displayMenu()
 {
     Console.WriteLine("=============================================");
@@ -15,6 +16,7 @@ void displayMenu()
     Console.WriteLine("Please select your option:");
 }
 
+//Feature 1: Load Airline and Boarding Gate (Completed)
 void loadAirlines()
 {
     using (StreamReader sr = new StreamReader("airlines.csv"))
@@ -51,6 +53,8 @@ void loadBoardingGates()
         }
     }
 }
+
+//Feature 2: Load Flight Data (Figuring out)
 void loadFlights()
 {
     using (StreamReader sr = new StreamReader("flights.csv"))
