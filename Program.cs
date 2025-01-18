@@ -179,6 +179,98 @@ void ListBoardingGates()
     }
 }
 
+//Feature 5: Assigh Boarding gate to flight (incompleted)
+void AssignBoardingGateToFlight()
+{
+    Console.WriteLine("=============================================");
+    Console.WriteLine("Assign a Boarding Gate to a Flight");
+    Console.WriteLine("=============================================");
+    while (true)
+    {
+        //Prompt user for flight number
+        Console.WriteLine("Enter Flight Number: ");
+        string flightNumber = Console.ReadLine().Trim();
+
+        //Check if the Flight exists
+        if (!flightsDict.ContainsKey(flightNumber))
+        {
+            Console.WriteLine("Flight not found. Please enter a valid flight number.");
+            continue;
+        }
+        //Get the Flight object
+        Flight selectedFlight = flightsDict[flightNumber];
+
+        //Determine the Special Request Code
+        string specialRequestCode;
+
+        if (selectedFlight is CFFTFlight)
+        {
+            specialRequestCode = "CFFT";
+        }
+        else if (selectedFlight is DDJBFlight)
+        {
+            specialRequestCode = "DDJB";
+        }
+        else if (selectedFlight is LWTTFlight)
+        {
+            specialRequestCode = "LWTT";
+        }
+        else
+        {
+            specialRequestCode = "None"; // Default for NORMFlight or other types
+        }
+
+
+        //Display basic information
+        Console.WriteLine($"Flight Number: {flightNumber}");
+        Console.WriteLine($"Origin: {selectedFlight.origin}");
+        Console.WriteLine($"Destination: {selectedFlight.destination}");
+        Console.WriteLine($"Expected Time: 18/1/2025 {selectedFlight.expectedTime:hh:mm:ss tt}");
+        Console.WriteLine($"Special Request Code: {specialRequestCode}");
+
+        //Prompt user for Boarding Gate
+        Console.WriteLine("Enter Boarding Gate Name: ");
+        string gateNum = Console.ReadLine();
+
+        // Further steps for boarding gate validation and assignment...
+        if (!boardinggatesDict.ContainsKey(gateNum))
+        {
+            Console.WriteLine("Boarding Gate not found. Please enter a valid gate number.");
+            continue;
+        }
+        //Get Boarding Gate object
+        BoardingGate gate = boardinggatesDict[gateNum];
+
+        if (gate.Flight != null)
+        {
+            Console.WriteLine($"Boarding Gate {gateNum} is already assigned to Flight {gate.Flight.flightNumber}.");
+            continue;
+        }
+        //Display Special Request Code
+        Console.WriteLine($"Supports DDJB: {gate.supportsDDJB}");
+        Console.WriteLine($"Supports CFFT: {gate.supportsCFFT}");
+        Console.WriteLine($"Supports LWTT: {gate.supportsLWTT}");
+        //Prompt the user if they would like to update the Status of the Flight
+        Console.WriteLine("Would you like to update the status of the flight? (Y/N)");
+        string choice = Console.ReadLine(); 
+
+        if (choice.ToUpper() == "Y")
+        {
+            Console.WriteLine("1. Delayed");
+            Console.WriteLine("2. Boarding");
+            Console.WriteLine("3. On Time");
+            Console.WriteLine("Please select the new status of the flight: ");
+
+            string newStatus = Console.ReadLine();
+        }
+
+
+        gate.Flight = selectedFlight; // Assign the gate to the flight
+        Console.WriteLine($"Successfully assigned Boarding Gate {gateNum} to Flight {flightNumber}.");
+
+        break;
+    }
+}
 //Feature 7: Display full flight details from an airline (In progress)
 void DisplayFlightDetails()
 {
