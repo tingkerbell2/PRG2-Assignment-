@@ -1,3 +1,4 @@
+//Completed features (Ting Li) : 1, 4
 
 Dictionary<string, Flight> flightsDict = new Dictionary<string, Flight>();
 Dictionary<string,Airline> airlinesDict = new Dictionary<string,Airline>();
