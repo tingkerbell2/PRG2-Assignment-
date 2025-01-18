@@ -171,7 +171,7 @@ void ListFlights()
 
 }
 
-//Feature 4: List all boarding gates (Completed)
+//Feature 4: List all boarding gates (Error: Boolean)
 void ListBoardingGates()
 {
     Console.WriteLine("=============================================");
