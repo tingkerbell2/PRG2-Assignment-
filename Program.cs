@@ -33,6 +33,10 @@ void loadAirlines()
             airlinesDict[airlineCode] = airline;
         }
     }
+
+    //Print out message
+    Console.WriteLine("Loading Airlines...");
+    Console.WriteLine("{airlinesDict.Count} Airlines Loaded!");
 }
 void loadBoardingGates()
 {
