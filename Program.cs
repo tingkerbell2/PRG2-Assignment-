@@ -56,6 +56,9 @@ void loadBoardingGates()
             boardinggatesDict[boardingGate] = gate;
         }
     }
+    //Print out message
+    Console.WriteLine("Loading Boarding Gates...");
+    Console.WriteLine("{boardinggatesDict.Count} Boarding Gates Loaded!");
 }
 
 //Feature 2: Load Flight Data (Figuring out)
