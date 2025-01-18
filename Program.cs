@@ -1,5 +1,5 @@
 //Completed features (Ting Li) : 1, 3, 4
-//Incompleted features (Ting Li): 7,8
+//Incompleted features (Ting Li): 7,8 + input validations for all
 
 Dictionary<string, Flight> flightsDict = new Dictionary<string, Flight>();
 Dictionary<string,Airline> airlinesDict = new Dictionary<string,Airline>();
