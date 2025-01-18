@@ -85,6 +85,15 @@ void loadFlights()
             //Extract airline code from the first 2 characters of the flight number
             string airlineCode = flightNumber.Substring(0, 2);
 
+
+loadAirlines();
+loadBoardingGates();
+//Print out message
+Console.WriteLine("Loading Airlines...");
+Console.WriteLine($"{airlinesDict.Count} Airlines Loaded!");
+Console.WriteLine("Loading Boarding Gates...");
+Console.WriteLine($"{boardinggatesDict.Count} Boarding Gates Loaded!");
+            
 //While true loop (for future use)
 while (true)
 {
