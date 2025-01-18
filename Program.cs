@@ -128,12 +128,7 @@ void DisplayAllFlights()
         }
         string expectedTimeInfo = "18/1/2025 " + flight.expectedTime.ToString("hh:mm:ss tt");
 
-        Console.WriteLine("{0,-16}{1,-23}{2,-24}{3,-23}{4,-20}",
-                         flight.flightNumber,
-                         airlineName,
-                         flight.origin,
-                         flight.destination,
-                         flight.expectedTime);
+        Console.WriteLine($"{flight.flightNumber,-16}{airlineName,-23}{flight.origin,-24}{flight.destination,-23}{flight.expectedTime,-20}");
     }
 }
 
