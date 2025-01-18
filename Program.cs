@@ -184,7 +184,7 @@ while (true)
    int option = Convert.ToInt32(Console.ReadLine());
    if (option == 1)
    {
-      ListFlights();
+      DisplayAllFlights();
    }
 
    else if (option == 2)
