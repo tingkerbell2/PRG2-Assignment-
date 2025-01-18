@@ -132,7 +132,7 @@ void DisplayAllFlights()
     }
 }
 
-//Feature 4: List Boarding gates
+//Feature 4: List Boarding gates (LWTT should be correct, but other 2 is wrong)
 void ListBoardingGates()
 {
     var boardinggatesDict = new Dictionary<string, BoardingGate>();
