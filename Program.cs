@@ -176,8 +176,6 @@ Console.WriteLine("Loading Airlines...");
 Console.WriteLine($"{airlinesDict.Count} Airlines Loaded!");
 Console.WriteLine("Loading Boarding Gates...");
 Console.WriteLine($"{boardinggatesDict.Count} Boarding Gates Loaded!");
-Console.WriteLine("Loading Flights...");
-Console.WriteLine($"{flightsDict.Count} Flights Loaded!");
 
 //While true loop (for future use)
 while (true)
