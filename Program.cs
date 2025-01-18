@@ -78,7 +78,20 @@ void loadFlights()
             //Extract airline code from the first 2 characters of the flight number
             string airlineCode = flightNumber.Substring(0, 2);
 
-
+//Feature 4: List all boarding gates (Completed)
+void ListBoardingGates()
+{
+    Console.WriteLine("=============================================");
+    Console.WriteLine("List of Boarding Gates for Changi Airport Terminal 5");
+    Console.WriteLine("=============================================");
+    //Header
+    Console.WriteLine("Gate Name\tDDJB\t\tCFFT\t\tLWTT");
+    // Iterate over boarding gates and print their details
+    foreach (var gate in boardinggatesDict.Values)
+    {
+        Console.WriteLine($"{gate.gateName}\t\t{gate.supportsDDJB}\t\t{gate.supportsCFFT}\t\t{gate.supportsLWTT}");
+    }
+}
 loadAirlines();
 loadBoardingGates();
 //Print out message
@@ -86,6 +99,8 @@ Console.WriteLine("Loading Airlines...");
 Console.WriteLine($"{airlinesDict.Count} Airlines Loaded!");
 Console.WriteLine("Loading Boarding Gates...");
 Console.WriteLine($"{boardinggatesDict.Count} Boarding Gates Loaded!");
+
+
             
 //While true loop (for future use)
 while (true)
