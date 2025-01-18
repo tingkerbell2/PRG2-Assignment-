@@ -1,4 +1,5 @@
 //Completed features (Ting Li) : 1, 3, 4
+//Incompleted features (Ting Li): 7,8
 
 Dictionary<string, Flight> flightsDict = new Dictionary<string, Flight>();
 Dictionary<string,Airline> airlinesDict = new Dictionary<string,Airline>();
@@ -185,6 +186,22 @@ void ListBoardingGates()
     }
 }
 
+//Feature 7: Display full flight details from an airline (In progress)
+void DisplayFlightDetails()
+{
+    //List all the airlines available
+    Console.WriteLine("=============================================");
+    Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
+    Console.WriteLine("=============================================");
+    Console.WriteLine("Airline Code\tAirline Name");
+    foreach (var Airline in airlinesDict.Values)
+    {
+        Console.WriteLine($"{Airline.Code}\t\t{Airline.Name}");
+    }
+    //Prompt user to enter airline code
+    Console.Write("Enter Airline Code:");
+    string? airlineCode = Console.ReadLine();
+}
             
 loadAirlines();
 loadBoardingGates();
