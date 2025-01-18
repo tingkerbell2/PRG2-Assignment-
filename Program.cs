@@ -144,11 +144,11 @@ void ListBoardingGates()
     Console.WriteLine("List of Boarding Gates for Changi Airport Terminal 5");
     Console.WriteLine("=============================================");
     //Header
-    Console.WriteLine("Gate Name\tDDJB\t\tCFFT\t\tLWTT");
+    Console.WriteLine("{0,-16}{1,-23}{2,-23}{3,-23}", "Gate Name", "DDJB", "CFFT", "LWTT");
     // Iterate over boarding gates and print their details
     foreach (var gate in boardinggatesDict.Values)
     {
-        Console.WriteLine($"{gate.gateName}\t\t{gate.supportsDDJB}\t\t{gate.supportsCFFT}\t\t{gate.supportsLWTT}");
+        Console.WriteLine($"{gate.gateName,-16}{gate.supportsDDJB,-23}{gate.supportsCFFT,-23}{gate.supportsLWTT,-23}");
     }
 }
 
