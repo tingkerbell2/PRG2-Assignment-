@@ -92,6 +92,8 @@ void ListBoardingGates()
         Console.WriteLine($"{gate.gateName}\t\t{gate.supportsDDJB}\t\t{gate.supportsCFFT}\t\t{gate.supportsLWTT}");
     }
 }
+
+            
 loadAirlines();
 loadBoardingGates();
 //Print out message
