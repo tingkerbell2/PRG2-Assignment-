@@ -216,36 +216,36 @@ Console.WriteLine($"{flightsDict.Count} Flights Loaded!");
 //While true loop (for future use)
 while (true)
 {
-    DisplayMenu();
-    int option = Convert.ToInt32(Console.ReadLine());
-    if (option == 1)
-    {
-        ListFlights();
-    }
+   DisplayMenu();
+   int option = Convert.ToInt32(Console.ReadLine());
+   if (option == 1)
+   {
+      ListFlights();
+   }
 
-    else if (option == 2)
-    {
-        ListBoardingGates();
-    }
-    else if (option == 3)
-    {
-        AssignBoardingGate();
-    }
-    else if (option == 4)
-    {
-        CreateFlight();
-    }
-    else if (option == 5)
-    {
-        DisplayAirlineFlights();
-    }
+   else if (option == 2)
+   {
+      ListBoardingGates();
+   }
+   else if (option == 3)
+   { 
+     //AssignBoardingGate();
+   }
+   else if (option == 4)
+   {
+     //CreateFlight();
+   }
+   else if (option == 5)
+   {
+        DisplayFlightDetails();
+   }
     else if (option == 6)
     {
-        ModifyFlightDetails();
+      //ModifyFlightDetails();
     }
     else if (option == 7)
     {
-        DisplayFlightSchedule();
+      //DisplayFlightSchedule();
     }
     else if (option == 0)
     {
@@ -253,6 +253,6 @@ while (true)
     }
     else
     {
-        Console.WriteLine("Invalid option. Please try again.");
+         Console.WriteLine("Invalid option. Please try again.");
     }
 }
