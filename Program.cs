@@ -1,3 +1,7 @@
+
+Dictionary<string, Flight> flightsDict = new Dictionary<string, Flight>();
+Dictionary<string,Airline> airlinesDict = new Dictionary<string,Airline>();
+Dictionary<string,BoardingGate> boardinggatesDict = new Dictionary<string,BoardingGate>();
 //Display Menu (Completed)
 void displayMenu()
 {
