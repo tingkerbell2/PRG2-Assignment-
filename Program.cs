@@ -290,11 +290,6 @@ void DisplayFlightDetails()
             
 loadAirlines();
 loadBoardingGates();
-//Print out message
-Console.WriteLine("Loading Airlines...");
-Console.WriteLine($"{airlinesDict.Count} Airlines Loaded!");
-Console.WriteLine("Loading Boarding Gates...");
-Console.WriteLine($"{boardinggatesDict.Count} Boarding Gates Loaded!");
 
 //While true loop (for future use)
 while (true)
