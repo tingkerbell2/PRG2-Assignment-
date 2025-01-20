@@ -64,7 +64,7 @@ void loadBoardingGates()
     }
 }
 
-//Feature 2: Load Flight Data (Figuring out)
+//Feature 2: Load Flight Data 
 void loadFlights()
 {
     using (StreamReader sr = new StreamReader("flights.csv"))
@@ -105,7 +105,7 @@ void loadFlights()
     }
 }
 
-//Feature 3: List Flights with basic information (Completed but the date time format wrong + am pm needs to be lower case)
+//Feature 3: List Flights with basic information (Completed)
 void DisplayAllFlights()
 {
     Console.WriteLine("=============================================");
