@@ -132,39 +132,20 @@ void DisplayAllFlights()
     }
 }
 
-//Feature 4: List Boarding gates (LWTT should be correct, but other 2 is wrong)
+//Feature 4: List Boarding gates 
 void ListBoardingGates()
 {
-    var boardinggatesDict = new Dictionary<string, BoardingGate>();
-    // Add gates A1 to A22
-    for (int i = 1; i <= 22; i++)
+    Console.WriteLine("=============================================");
+    Console.WriteLine("List of Boarding Gates for Changi Airport Terminal 5");
+    Console.WriteLine("=============================================");
+    //Header
+    Console.WriteLine("{0,-16}{1,-23}{2,-23}{3,-23}", "Gate Name", "DDJB", "CFFT", "LWTT");
+    // Iterate over boarding gates and print their details
+    foreach (BoardingGate gate in boardinggatesDict.Values)
     {
-        string gateName = $"A{i}";
-        bool supportsDDJB = (i >= 10 && i <= 13) || (i >= 20 && i <= 22); // True for A10-A13, A20-A22
-        bool supportsCFFT = false; // False for all A gates
-        bool supportsLWTT = (i == 1 || i == 2 || i >= 20); // True for A1, A2, A20-A22
-        boardinggatesDict[gateName] = new BoardingGate(gateName, supportsDDJB, supportsCFFT, supportsLWTT);
+        Console.WriteLine($"{gate.gateName,-16}{gate.supportsDDJB,-23}{gate.supportsCFFT,-23}{gate.supportsLWTT,-23}");
     }
-
-    // Add gates B1 to B22
-    for (int i = 1; i <= 22; i++)
-    {
-        string gateName = $"B{i}";
-        bool supportsDDJB = (i >= 10 && i <= 12); // True for B10-B12
-        bool supportsCFFT = (i >= 1 && i <= 3); // True for B1-B3
-        bool supportsLWTT = true; // True for all B gates
-        boardinggatesDict[gateName] = new BoardingGate(gateName, supportsDDJB, supportsCFFT, supportsLWTT);
-    }
-
-    // Add gates C1 to C22
-    for (int i = 1; i <= 22; i++)
-    {
-        string gateName = $"C{i}";
-        bool supportsDDJB = false; // False for all C gates
-        bool supportsCFFT = true; // True for all C gates
-        bool supportsLWTT = (i >= 14 && i <= 16); // True for C14-C16
-        boardinggatesDict[gateName] = new BoardingGate(gateName, supportsDDJB, supportsCFFT, supportsLWTT);
-    }
+}
 
 
     Console.WriteLine("=============================================");
