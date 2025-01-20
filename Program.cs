@@ -147,19 +147,6 @@ void ListBoardingGates()
     }
 }
 
-
-    Console.WriteLine("=============================================");
-    Console.WriteLine("List of Boarding Gates for Changi Airport Terminal 5");
-    Console.WriteLine("=============================================");
-    //Header
-    Console.WriteLine("Gate Name\tDDJB\t\tCFFT\t\tLWTT");
-    // Iterate over boarding gates and print their details
-    foreach (var gate in boardinggatesDict.Values)
-    {
-      Console.WriteLine($"{gate.gateName}\t\t{gate.supportsDDJB}\t\t{gate.supportsCFFT}\t\t{gate.supportsLWTT}");
-    }
-}
-
 //Feature 5: Assigh Boarding gate to flight (incompleted)
 void AssignBoardingGateToFlight()
 {
