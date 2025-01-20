@@ -147,7 +147,7 @@ void ListBoardingGates()
     }
 }
 
-//Feature 5: Assigh Boarding gate to flight (incompleted)
+//Feature 5: Assigh Boarding gate to flight 
 void AssignBoardingGateToFlight()
 {
     Console.WriteLine("=============================================");
@@ -195,9 +195,10 @@ void AssignBoardingGateToFlight()
         Console.WriteLine($"Destination: {selectedFlight.destination}");
         Console.WriteLine($"Expected Time: 18/1/2025 {selectedFlight.expectedTime:hh:mm:ss tt}");
         Console.WriteLine($"Special Request Code: {specialRequestCode}");
+        Console.WriteLine();
 
         //Prompt user for Boarding Gate
-        Console.WriteLine("Enter Boarding Gate Name: ");
+        Console.WriteLine("Enter Boarding Gate Number: ");
         string gateNum = Console.ReadLine();
 
         // Further steps for boarding gate validation and assignment...
@@ -206,21 +207,24 @@ void AssignBoardingGateToFlight()
             Console.WriteLine("Boarding Gate not found. Please enter a valid gate number.");
             continue;
         }
+
         //Get Boarding Gate object
         BoardingGate gate = boardinggatesDict[gateNum];
 
-        if (gate.Flight != null)
-        {
-            Console.WriteLine($"Boarding Gate {gateNum} is already assigned to Flight {gate.Flight.flightNumber}.");
-            continue;
-        }
         //Display Special Request Code
         Console.WriteLine($"Supports DDJB: {gate.supportsDDJB}");
         Console.WriteLine($"Supports CFFT: {gate.supportsCFFT}");
         Console.WriteLine($"Supports LWTT: {gate.supportsLWTT}");
+
+        //if (gate.Flight != null)
+        //{
+        //    Console.WriteLine($"Boarding Gate {gateNum} is already assigned to Flight {gate.Flight.flightNumber}.");
+        //    continue;
+        //}
+
         //Prompt the user if they would like to update the Status of the Flight
         Console.WriteLine("Would you like to update the status of the flight? (Y/N)");
-        string choice = Console.ReadLine(); 
+        string choice = Console.ReadLine();
 
         if (choice.ToUpper() == "Y")
         {
@@ -230,15 +234,34 @@ void AssignBoardingGateToFlight()
             Console.WriteLine("Please select the new status of the flight: ");
 
             string newStatus = Console.ReadLine();
+
+            switch (newStatus)
+            {
+                case "1":
+                    selectedFlight.status = "Delayed";
+                    break;
+                case "2":
+                    selectedFlight.status = "Boarding";
+                    break;
+                case "3":
+                    selectedFlight.status = "On Time";
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Status remains unchanged.");
+                    continue;
+            }
+        }
+        else
+        {
+            break;
         }
 
-
-        gate.Flight = selectedFlight; // Assign the gate to the flight
-        Console.WriteLine($"Successfully assigned Boarding Gate {gateNum} to Flight {flightNumber}.");
-
-        break;
+        Console.WriteLine($"Flight {flightNumber} has been assigned to Boarding Gate {gateNum}");
+        Console.WriteLine(selectedFlight.ToString());
+        break;        
     }
 }
+
 //Feature 7: Display full flight details from an airline (In progress)
 void DisplayFlightDetails()
 {
