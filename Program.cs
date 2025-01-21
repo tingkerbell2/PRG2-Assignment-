@@ -4,6 +4,7 @@
 Dictionary<string, Flight> flightsDict = new Dictionary<string, Flight>();
 Dictionary<string,Airline> airlinesDict = new Dictionary<string,Airline>();
 Dictionary<string,BoardingGate> boardinggatesDict = new Dictionary<string,BoardingGate>();
+
 //Display Menu (Completed)
 void displayMenu()
 {
@@ -64,7 +65,7 @@ void loadBoardingGates()
     }
 }
 
-//Feature 2: Load Flight Data 
+//Feature 2: Load Flight Data (Completed)
 void loadFlights()
 {
     using (StreamReader sr = new StreamReader("flights.csv"))
@@ -132,7 +133,7 @@ void DisplayAllFlights()
     }
 }
 
-//Feature 4: List Boarding gates 
+//Feature 4: List Boarding gates (Completed)
 void ListBoardingGates()
 {
     Console.WriteLine("=============================================");
@@ -147,7 +148,7 @@ void ListBoardingGates()
     }
 }
 
-//Feature 5: Assigh Boarding gate to flight 
+//Feature 5: Assigh Boarding gate to flight (Completed)
 void AssignBoardingGateToFlight()
 {
     Console.WriteLine("=============================================");
