@@ -268,14 +268,49 @@ void DisplayFlightDetails()
     Console.WriteLine("=============================================");
     Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
     Console.WriteLine("=============================================");
-    Console.WriteLine("Airline Code\tAirline Name");
-    foreach (var Airline in airlinesDict.Values)
+    Console.WriteLine("{0,-16}{1,-23}", "Airline Code", "Airline Name");
+
+    foreach (var airline in airlinesDict.Values)
     {
-        Console.WriteLine($"{Airline.Code}\t\t{Airline.Name}");
+        Console.WriteLine($"{airline.Code,-16}{airline.Name,-23}");
     }
-    //Prompt user to enter airline code
-    Console.Write("Enter Airline Code:");
-    string? airlineCode = Console.ReadLine();
+
+    //Prompt the user to enter the airline code
+    Console.Write("Enter Airline Code: ");
+    string? airlineCode = Console.ReadLine()?.Trim();
+
+    // Step 3: Validate the airline code
+    if (!airlinesDict.ContainsKey(airlineCode))
+    {
+        Console.WriteLine("Invalid airline code. Please try again.");
+        return;
+    }
+
+    //Retrieve the airline object
+    Airline selectedAirline = airlinesDict[airlineCode];
+    Console.WriteLine($"Selected Airline: {selectedAirline.Name}");
+
+    //List all flights for the selected airline
+    Console.WriteLine("=============================================");
+    Console.WriteLine($"List of Flights for {selectedAirline.Name}");
+    Console.WriteLine("=============================================");
+    Console.WriteLine("{0,-16}{1,-23}{2,-23}{3,-23}{4,-30}",
+                      "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time");
+
+    var airlineFlights = flightsDict.Values
+        .Where(flight => flight.flightNumber.StartsWith(airlineCode))
+        .ToList();
+
+    if (airlineFlights.Count == 0)
+    {
+        Console.WriteLine("No flights available for this airline.");
+        return;
+    }
+
+    foreach (var flight in airlineFlights)
+    {
+        Console.WriteLine($"{flight.flightNumber,-16}{selectedAirline.Name,-23}{flight.origin,-23}{flight.destination,-23}{flight.expectedTime:dd/MM/yyyy hh:mm:ss tt,-30}");
+    }
 }
             
 loadAirlines();
