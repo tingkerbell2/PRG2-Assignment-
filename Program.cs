@@ -311,7 +311,13 @@ void DisplayFlightDetails() //feature 7
         Console.WriteLine($"{flight.flightNumber,-16}{selectedAirline.Name,-23}{flight.origin,-23}{flight.destination,-23}{flight.expectedTime:dd/MM/yyyy hh:mm:ss tt}");
     }
 }
-            
+
+//Feature 8: Modify Flight Details (In progress)
+void ModifyFlightDetails()
+{
+    
+}
+    
 loadAirlines();
 loadBoardingGates();
 
@@ -331,11 +337,11 @@ while (true)
    }
    else if (option == 3)
    { 
-     //AssignBoardingGate();
+     AssignBoardingGateToFlight();
    }
    else if (option == 4)
    {
-     //CreateFlight();
+     CreateFlight();
    }
    else if (option == 5)
    {
@@ -343,7 +349,7 @@ while (true)
    }
     else if (option == 6)
     {
-      //ModifyFlightDetails();
+      ModifyFlightDetails();
     }
     else if (option == 7)
     {
