@@ -261,10 +261,10 @@ void AssignBoardingGateToFlight()
     }
 }
 
-//Feature 7: Display full flight details from an airline (In progress)
-void DisplayFlightDetails()
+//Feature 7: Display full flight details from an airline (Completed)
+void DisplayFlightDetails() //feature 7
 {
-    //List all the airlines available
+    // Step 1: List all the airlines available
     Console.WriteLine("=============================================");
     Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
     Console.WriteLine("=============================================");
@@ -275,7 +275,7 @@ void DisplayFlightDetails()
         Console.WriteLine($"{airline.Code,-16}{airline.Name,-23}");
     }
 
-    //Prompt the user to enter the airline code
+    // Step 2: Prompt the user to enter the airline code
     Console.Write("Enter Airline Code: ");
     string? airlineCode = Console.ReadLine()?.Trim();
 
@@ -286,11 +286,10 @@ void DisplayFlightDetails()
         return;
     }
 
-    //Retrieve the airline object
+    // Retrieve the airline object
     Airline selectedAirline = airlinesDict[airlineCode];
-    Console.WriteLine($"Selected Airline: {selectedAirline.Name}");
 
-    //List all flights for the selected airline
+    // Step 4: List all flights for the selected airline
     Console.WriteLine("=============================================");
     Console.WriteLine($"List of Flights for {selectedAirline.Name}");
     Console.WriteLine("=============================================");
@@ -309,7 +308,7 @@ void DisplayFlightDetails()
 
     foreach (var flight in airlineFlights)
     {
-        Console.WriteLine($"{flight.flightNumber,-16}{selectedAirline.Name,-23}{flight.origin,-23}{flight.destination,-23}{flight.expectedTime:dd/MM/yyyy hh:mm:ss tt,-30}");
+        Console.WriteLine($"{flight.flightNumber,-16}{selectedAirline.Name,-23}{flight.origin,-23}{flight.destination,-23}{flight.expectedTime:dd/MM/yyyy hh:mm:ss tt}");
     }
 }
             
