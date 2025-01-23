@@ -313,6 +313,7 @@ void DisplayFlightDetails() //feature 7
 }
 
 //Feature 8: Modify Flight Details (In progress)
+//Feature 8: Modify Flight Details
 void ModifyFlightDetails()
 {
     //List all the airlines available
@@ -366,113 +367,142 @@ void ModifyFlightDetails()
         Console.WriteLine("Invalid flight number. Please try again.");
         return;
     }
-
-    Flight selectedFlight = flightsDict[flightNumber];
-
-    //Option to modify or delete
-    //Console.WriteLine($"{flightNumber}");
-    Console.WriteLine("1. Modify Flight");
-    Console.WriteLine("2. Delete Flight");
-    Console.WriteLine("Choose an option: ");
-    string actionChoice = Console.ReadLine()?.Trim();
-
-    if (actionChoice == "2")
+    string? specialcode = "";
+    int running = 0;
+    foreach (var flight in airlineFlights)
     {
-        // Delete the flight
-        flightsDict.Remove(flightNumber);
-        Console.WriteLine($"Flight {flightNumber} has been deleted successfully.");
-        return;
-    }
-    else if (actionChoice != "1")
-    {
-        Console.WriteLine("Invalid option. Returning to menu.");
-        return;
-    }
+        if (flight is DDJBFlight)
+        {
+            specialcode = "DDJB";
+            running = 1;
+        }
+        else if (flight is CFFTFlight)
+        {
+            specialcode = "CFFT";
+            running = 1;
+        }
+        else if (flight is LWTTFlight)
+        {
+            specialcode = "LWTT";
+            running = 1;
+        }
+        else if (flight is NORMFlight)
+        {
+            specialcode = "None";
+            running = 1;
+        }
+        else
+        {
+            specialcode = "Invalid";
+            running = 1;
+        }
+        Flight selectedFlight = flightsDict[flightNumber];
 
-    //Display modification options
-    Console.WriteLine("1. Modify Basic Information");
-    Console.WriteLine("2. Modify Status");
-    Console.WriteLine("3. Modify Special Request Code");
-    Console.WriteLine("4. Modify Boarding Gate");
-    Console.WriteLine("Choose an option: ");
-    string choice = Console.ReadLine()?.Trim();
+        //Option to modify or delete
+        //Console.WriteLine($"{flightNumber}");
+        Console.WriteLine("1. Modify Flight");
+        Console.WriteLine("2. Delete Flight");
+        Console.WriteLine("Choose an option: ");
+        string actionChoice = Console.ReadLine()?.Trim();
 
-    switch (choice)
-    {
-        case "1":
-            Console.Write("Enter new Origin: ");
-            selectedFlight.origin = Console.ReadLine()?.Trim();
-            Console.Write("Enter new Destination: ");
-            selectedFlight.destination = Console.ReadLine()?.Trim();
-            Console.Write("Enter new Expected Departure/Arrival Time (dd/mm/yyyy hh:mm): ");
-            string newTimeInput = Console.ReadLine()?.Trim();
-            if (DateTime.TryParse(newTimeInput, out DateTime newTime))
-            {
-                selectedFlight.expectedTime = newTime;
-            }
-            else
-            {
-                Console.WriteLine("Invalid time format. No changes made to the time.");
-            }
-            break;
-
-        case "2":
-            Console.WriteLine("1. Delayed");
-            Console.WriteLine("2. Boarding");
-            Console.WriteLine("3. On Time");
-            Console.Write("Choose a new status: ");
-            string statusOption = Console.ReadLine()?.Trim();
-            switch (statusOption)
-            {
-                case "1":
-                    selectedFlight.status = "Delayed";
-                    break;
-                case "2":
-                    selectedFlight.status = "Boarding";
-                    break;
-                case "3":
-                    selectedFlight.status = "On Time";
-                    break;
-                default:
-                    Console.WriteLine("Invalid status. No changes made.");
-                    break;
-            }
-            break;
-
-        case "3":
-            Console.Write("Enter new Special Request Code (CFFT/DDJB/LWTT/None): ");
-            string newCode = Console.ReadLine()?.Trim();
-            // Update logic for special request code based on input
-            break;
-
-        case "4":
-            Console.Write("Enter new Boarding Gate: ");
-            string newGate = Console.ReadLine()?.Trim();
-            if (boardinggatesDict.ContainsKey(newGate))
-            {
-                // Logic to assign boarding gate
-            }
-            else
-            {
-                Console.WriteLine("Invalid gate. No changes made.");
-            }
-            break;
-
-        default:
+        if (actionChoice == "2")
+        {
+            // Delete the flight
+            flightsDict.Remove(flightNumber);
+            Console.WriteLine($"Flight {flightNumber} has been deleted successfully.");
+            return;
+        }
+        else if (actionChoice != "1")
+        {
             Console.WriteLine("Invalid option. Returning to menu.");
             return;
-    }
+        }
 
-    // Display updated flight details
-    Console.WriteLine("Flight updated!");
-    Console.WriteLine($"Flight Number: {selectedFlight.flightNumber}");
-    Console.WriteLine($"Airline Name: {selectedAirline.Name}");
-    Console.WriteLine($"Origin: {selectedFlight.origin}");
-    Console.WriteLine($"Destination: {selectedFlight.destination}");
-    Console.WriteLine($"Expected Departure/Arrival Time: {selectedFlight.expectedTime:dd/MM/yyyy hh:mm:ss tt}");
-    Console.WriteLine($"Status: {selectedFlight.status}");
-    Console.WriteLine($"Special Request Code: {selectedFlight.specialRequestCode}");
-    Console.WriteLine($"Boarding Gate: {selectedFlight.boardingGate ?? "Unassigned"}");
+        //Display modification options
+        Console.WriteLine("1. Modify Basic Information");
+        Console.WriteLine("2. Modify Status");
+        Console.WriteLine("3. Modify Special Request Code");
+        Console.WriteLine("4. Modify Boarding Gate");
+        Console.WriteLine("Choose an option: ");
+        string choice = Console.ReadLine()?.Trim();
+
+        switch (choice)
+        {
+            case "1":
+                Console.Write("Enter new Origin: ");
+                selectedFlight.origin = Console.ReadLine()?.Trim();
+                Console.Write("Enter new Destination: ");
+                selectedFlight.destination = Console.ReadLine()?.Trim();
+                Console.Write("Enter new Expected Departure/Arrival Time (dd/mm/yyyy hh:mm): ");
+                string newTimeInput = Console.ReadLine()?.Trim();
+                if (DateTime.TryParse(newTimeInput, out DateTime newTime))
+                {
+                    selectedFlight.expectedTime = newTime;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid time format. No changes made to the time.");
+                }
+                break;
+
+            case "2":
+                Console.WriteLine("1. Delayed");
+                Console.WriteLine("2. Boarding");
+                Console.WriteLine("3. On Time");
+                Console.Write("Choose a new status: ");
+                string statusOption = Console.ReadLine()?.Trim();
+                switch (statusOption)
+                {
+                    case "1":
+                        selectedFlight.status = "Delayed";
+                        break;
+                    case "2":
+                        selectedFlight.status = "Boarding";
+                        break;
+                    case "3":
+                        selectedFlight.status = "On Time";
+                        break;
+                    default:
+                        Console.WriteLine("Invalid status. No changes made.");
+                        break;
+                }
+                break;
+
+            case "3":
+                Console.Write("Enter new Special Request Code (CFFT/DDJB/LWTT/None): ");
+                string newCode = Console.ReadLine()?.Trim();
+                // Update logic for special request code based on input
+                break;
+
+            case "4":
+                Console.Write("Enter new Boarding Gate: ");
+                string newGate = Console.ReadLine()?.Trim();
+                if (boardinggatesDict.ContainsKey(newGate))
+                {
+                    // Logic to assign boarding gate
+                }
+                else
+                {
+                    Console.WriteLine("Invalid gate. No changes made.");
+                }
+                break;
+
+            default:
+                Console.WriteLine("Invalid option. Returning to menu.");
+                return;
+        }
+
+        // Display updated flight details
+        Console.WriteLine("Flight updated!");
+        Console.WriteLine($"Flight Number: {selectedFlight.flightNumber}");
+        Console.WriteLine($"Airline Name: {selectedAirline.Name}");
+        Console.WriteLine($"Origin: {selectedFlight.origin}");
+        Console.WriteLine($"Destination: {selectedFlight.destination}");
+        Console.WriteLine($"Expected Departure/Arrival Time: {selectedFlight.expectedTime:dd/MM/yyyy hh:mm:ss tt}");
+        Console.WriteLine($"Status: {selectedFlight.status}");
+        Console.WriteLine($"Special Request Code: {specialcode}");
+        //Console.WriteLine($"Boarding Gate: {selectedFlight.boardingGate ?? "Unassigned"}");
+    }
 }
     
 loadAirlines();
