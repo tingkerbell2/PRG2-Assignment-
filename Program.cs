@@ -470,7 +470,38 @@ void ModifyFlightDetails()
     Console.WriteLine($"Special Request Code: CFFT"); // Assuming CFFT is the default code
     Console.WriteLine($"Boarding Gate: {(boardinggatesDict.ContainsKey(flightNumber) ? boardinggatesDict[flightNumber].gateName : "Unassigned")}");
 }
-    
+
+void displayScheduledflights() //Feature 9 (output different from answer)
+{
+    Console.WriteLine("=============================================");
+    Console.WriteLine("List of Flights in Chronological Order");
+    Console.WriteLine("=============================================");
+    Console.WriteLine("{0,-16}{1,-23}{2,-24}{3,-23}{4,-20}",
+                      "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time","Status","Boarding Gate");
+
+    //Create a list of all flights from the dictionary
+    List<Flight> sortedFlights = new List<Flight>(flightsDict.Values);
+
+    //Sort the list using IComparable interface implemented in the Flight class
+    sortedFlights.Sort();
+
+    //Display each flight's details in sorted order 
+    foreach (Flight flight in sortedFlights)
+    {
+        string[] flightNumParts = flight.flightNumber.Split(" ");
+        string airlineCode = flightNumParts[0];
+
+        string airlineName = "";
+        if (airlinesDict.ContainsKey(airlineCode))
+        {
+            airlineName = airlinesDict[airlineCode].Name;
+        }
+        string expectedTimeInfo = flight.expectedTime.ToString("dd/MM/yyyy hh:mm:ss tt");
+
+        Console.WriteLine($"{flight.flightNumber,-16} {airlineName,-23} {flight.origin,-24} {flight.destination,-23} {expectedTimeInfo,-20}");
+
+    }
+}
 loadAirlines();
 loadBoardingGates();
 
