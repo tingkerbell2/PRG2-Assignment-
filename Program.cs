@@ -157,13 +157,22 @@ void AssignBoardingGateToFlight()
         //Prompt user for flight number
         Console.WriteLine("Enter Flight Number: ");
         string flightNumber = Console.ReadLine().Trim();
-
-        //Check if the Flight exists
         if (!flightsDict.ContainsKey(flightNumber))
         {
             Console.WriteLine("Flight not found. Please enter a valid flight number.");
             continue;
         }
+        //Prompt user for Boarding Gate
+        Console.WriteLine("Enter Boarding Gate Number: ");
+        string gateNum = Console.ReadLine();
+        if (!boardinggatesDict.ContainsKey(gateNum))
+        {
+            Console.WriteLine("Boarding gate not found. Please enter a valid boarding gate number.");
+            continue;
+        }
+
+        //Check if the Flight exists
+
         //Get the Flight object
         Flight selectedFlight = flightsDict[flightNumber];
 
@@ -194,11 +203,9 @@ void AssignBoardingGateToFlight()
         Console.WriteLine($"Destination: {selectedFlight.destination}");
         Console.WriteLine($"Expected Time: 18/1/2025 {selectedFlight.expectedTime:hh:mm:ss tt}");
         Console.WriteLine($"Special Request Code: {specialRequestCode}");
-        Console.WriteLine();
+        Console.WriteLine($"Boarding Gate Name: {gateNum}");
 
-        //Prompt user for Boarding Gate
-        Console.WriteLine("Enter Boarding Gate Number: ");
-        string gateNum = Console.ReadLine();
+        
 
         // Further steps for boarding gate validation and assignment...
         if (!boardinggatesDict.ContainsKey(gateNum))
@@ -255,8 +262,7 @@ void AssignBoardingGateToFlight()
             break;
         }
 
-        Console.WriteLine($"Flight {flightNumber} has been assigned to Boarding Gate {gateNum}");
-        Console.WriteLine(selectedFlight.ToString());
+        Console.WriteLine($"Flight {flightNumber} has been assigned to Boarding Gate {gateNum}!");
         break;        
     }
 }
