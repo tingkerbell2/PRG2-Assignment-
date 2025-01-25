@@ -267,6 +267,76 @@ void AssignBoardingGateToFlight()
     }
 }
 
+//Feature 6: Create flight
+void CreateFLight()
+{
+    bool addAnotherFlight = true;
+
+    while (addAnotherFlight)
+    {
+        // Prompt user for flight specifications
+        Console.Write("Enter Flight Number: ");
+        string flightNumber = Console.ReadLine();
+
+        //Ensure the flight number is unique
+        if (flightsDict.ContainsKey(flightNumber))
+        {
+            Console.WriteLine($"Flight {flightNumber} already exists. Please use a unique flight number.");
+            continue;
+        }
+        Console.Write("Enter Origin: ");
+        string origin = Console.ReadLine();
+        Console.Write("Enter Destination: ");
+        string destination = Console.ReadLine();
+        Console.Write("Enter Expected Departure/Arrival Time (dd/mm/yyyy hh:mm): ");
+        DateTime expectedTime = Convert.ToDateTime(Console.ReadLine());
+
+        Console.Write("Enter Special Request Code (CFFT/DDJB/LWTT/None): ");
+        string specialRequestCode = Console.ReadLine().ToUpper();
+
+        Flight newFlight;
+        switch (specialRequestCode)
+        {
+            case "CFFT":
+                newFlight = new CFFTFlight(flightNumber, origin, destination, expectedTime, "Scheduled",150);
+                break;
+            case "DDJB":
+                newFlight = new DDJBFlight(flightNumber, origin, destination, expectedTime, "Scheduled",300);
+                break;
+            case "LWTT":
+                newFlight = new LWTTFlight(flightNumber, origin, destination, expectedTime, "Scheduled",500);
+                break;
+            default:
+                newFlight = new NORMFlight(flightNumber, origin, destination, expectedTime, "Scheduled");
+                specialRequestCode = "";
+                break;
+        }
+        //add flight to dictionary
+        flightsDict[flightNumber] = newFlight;
+
+        //Append new flight to csv
+        string flightData = $"{flightNumber},{origin},{destination},{expectedTime:yyyy-MM-dd HH:mm},{specialRequestCode}";
+
+        Console.WriteLine($"Flight {flightNumber} has been successfully added.");
+
+        //Prompt to add another flight
+        Console.Write("Would you like to add another flight? [Y/N]: ");
+        string choice = Console.ReadLine().ToUpper();
+        //addAnotherFlight
+        if (choice == "N")
+        {
+            break;
+        }
+        else if (choice == "Y")
+        {
+            continue;
+        }
+        else
+        {
+            Console.WriteLine("Invalid option.");
+        }
+    }
+}
 //Feature 7: Display full flight details from an airline (Completed)
 void DisplayFlightDetails() //feature 7
 {
