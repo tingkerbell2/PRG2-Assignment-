@@ -267,102 +267,6 @@ void AssignBoardingGateToFlight()
     }
 }
 
-        //Check if the Flight exists
-
-        //Get the Flight object
-        Flight selectedFlight = flightsDict[flightNumber];
-
-        //Determine the Special Request Code
-        string specialRequestCode;
-
-        if (selectedFlight is CFFTFlight)
-        {
-            specialRequestCode = "CFFT";
-        }
-        else if (selectedFlight is DDJBFlight)
-        {
-            specialRequestCode = "DDJB";
-        }
-        else if (selectedFlight is LWTTFlight)
-        {
-            specialRequestCode = "LWTT";
-        }
-        else
-        {
-            specialRequestCode = "None"; // Default for NORMFlight or other types
-        }
-
-
-        //Display basic information
-        Console.WriteLine($"Flight Number: {flightNumber}");
-        Console.WriteLine($"Origin: {selectedFlight.origin}");
-        Console.WriteLine($"Destination: {selectedFlight.destination}");
-        Console.WriteLine($"Expected Time: 18/1/2025 {selectedFlight.expectedTime:hh:mm:ss tt}");
-        Console.WriteLine($"Special Request Code: {specialRequestCode}");
-        Console.WriteLine($"Boarding Gate Name: {gateNum}");
-
-        
-
-        // Further steps for boarding gate validation and assignment...
-        if (!boardinggatesDict.ContainsKey(gateNum))
-        {
-            Console.WriteLine("Boarding Gate not found. Please enter a valid gate number.");
-            continue;
-        }
-
-        //Get Boarding Gate object
-        BoardingGate gate = boardinggatesDict[gateNum];
-
-        //Display Special Request Code
-        Console.WriteLine($"Supports DDJB: {gate.supportsDDJB}");
-        Console.WriteLine($"Supports CFFT: {gate.supportsCFFT}");
-        Console.WriteLine($"Supports LWTT: {gate.supportsLWTT}");
-
-        //if (gate.Flight != null)
-        //{
-        //    Console.WriteLine($"Boarding Gate {gateNum} is already assigned to Flight {gate.Flight.flightNumber}.");
-        //    continue;
-        //}
-
-        //Prompt the user if they would like to update the Status of the Flight
-        Console.WriteLine("Would you like to update the status of the flight? (Y/N)");
-        string choice = Console.ReadLine();
-
-        if (choice.ToUpper() == "Y")
-        {
-            Console.WriteLine("1. Delayed");
-            Console.WriteLine("2. Boarding");
-            Console.WriteLine("3. On Time");
-            Console.WriteLine("Please select the new status of the flight: ");
-
-            string newStatus = Console.ReadLine();
-
-            switch (newStatus)
-            {
-                case "1":
-                    selectedFlight.status = "Delayed";
-                    break;
-                case "2":
-                    selectedFlight.status = "Boarding";
-                    break;
-                case "3":
-                    selectedFlight.status = "On Time";
-                    break;
-                default:
-                    Console.WriteLine("Invalid choice. Status remains unchanged.");
-                    continue;
-            }
-        }
-        else
-        {
-            break;
-        }
-
-        Console.WriteLine($"Flight {flightNumber} has been assigned to Boarding Gate {gateNum}!");
-        break;        
-    }
-}
-
 //Feature 6: Create flight
 void CreateFLight()
 {
@@ -375,7 +279,7 @@ void CreateFLight()
         string flightNumber = Console.ReadLine();
 
         //Ensure the flight number is unique
-        if (flightsDict.ContainsKey(flightNumber))
+        if (terminal.flights.ContainsKey(flightNumber))
         {
             Console.WriteLine($"Flight {flightNumber} already exists. Please use a unique flight number.");
             continue;
@@ -408,7 +312,7 @@ void CreateFLight()
                 break;
         }
         //add flight to dictionary
-        flightsDict[flightNumber] = newFlight;
+        terminal.AddFlight(newFlight);
 
         //Append new flight to csv
         string flightData = $"{flightNumber},{origin},{destination},{expectedTime:yyyy-MM-dd HH:mm},{specialRequestCode}";
