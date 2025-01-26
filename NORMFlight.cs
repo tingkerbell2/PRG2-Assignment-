@@ -1,10 +1,15 @@
+	//==========================================================
+	// Student Number	: S10267822
+	// Student Name	: Lau Jia Qi
+	// Partner Name	: Ee Ting Li
+//==========================================================
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace S10267852_PRG2_Assignment
+namespace PRG2_Assignment
 {
     public class NORMFlight : Flight
     {
