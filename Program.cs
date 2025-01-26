@@ -3,6 +3,7 @@
 // Student Name	: Lau Jia Qi
 // Partner Name	: Ee Ting Li
 //==========================================================
+using PRG2_Assignment;
 Terminal terminal = new Terminal("Changi Airport Terminal 5");
 
 //Display Menu (Completed)
