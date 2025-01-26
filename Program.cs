@@ -65,7 +65,7 @@ void loadBoardingGates()
     }
 }
 //Feature 2: Load Flight Data (Completed)
-void loadFlights()
+void loadFlights() 
 {
     using (StreamReader sr = new StreamReader("flights.csv"))
     {
@@ -94,19 +94,19 @@ void loadFlights()
                 case "LWTT":
                     flight = new LWTTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 500);
                     break;
-                default:    
+                default:
                     flight = new NORMFlight(flightNumber, origin, destination, expectedTime, "Scheduled");
                     break;
             }
-            flightsDict.Add(flightNumber, flight);
+            terminal.AddFlight(flight);
         }
         Console.WriteLine("Loading Flights...");
-        Console.WriteLine($"{flightsDict.Count()} Flights Loaded!");
+        Console.WriteLine($"{terminal.flights.Count()} Flights Loaded!");
     }
 }
 
 //Feature 3: List Flights with basic information (Completed)
-void DisplayAllFlights()
+void DisplayAllFlights() 
 {
     Console.WriteLine("=============================================");
     Console.WriteLine("List of Flights for Changi Airport Terminal 5");
@@ -114,7 +114,7 @@ void DisplayAllFlights()
     Console.WriteLine("{0,-16}{1,-23}{2,-24}{3,-23}{4,-20}",
                       "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time");
 
-    foreach (Flight flight in flightsDict.Values)
+    foreach (Flight flight in terminal.flights.Values)
     {
         string[] flightNumParts = flight.flightNumber.Split(" ");
         string airlineCode = flightNumParts[0];
@@ -122,18 +122,17 @@ void DisplayAllFlights()
         // Initialize airlineName to "" as a default value
         string airlineName = "";
 
-        if (airlinesDict.ContainsKey(airlineCode))
+        if (terminal.Airlines.ContainsKey(airlineCode))
         {
-            airlineName = airlinesDict[airlineCode].Name;
+            airlineName = terminal.Airlines[airlineCode].Name;
         }
-        string expectedTimeInfo = "18/1/2025 " + flight.expectedTime.ToString("hh:mm:ss tt");
+        //string expectedTimeInfo = "18/1/2025 " + flight.expectedTime.ToString("hh:mm:ss tt");
 
-        Console.WriteLine($"{flight.flightNumber,-16}{airlineName,-23}{flight.origin,-24}{flight.destination,-23}{flight.expectedTime,-20}");
+        Console.WriteLine($"{flight.flightNumber,-16}{airlineName,-23}{flight.origin,-24}{flight.destination,-23}{flight.expectedTime:dd/MM/yyyy hh:mm:ss tt}");
     }
 }
-
 //Feature 4: List Boarding gates (Completed)
-void ListBoardingGates()
+void ListBoardingGates() 
 {
     Console.WriteLine("=============================================");
     Console.WriteLine("List of Boarding Gates for Changi Airport Terminal 5");
@@ -141,7 +140,7 @@ void ListBoardingGates()
     //Header
     Console.WriteLine("{0,-16}{1,-23}{2,-23}{3,-23}", "Gate Name", "DDJB", "CFFT", "LWTT");
     // Iterate over boarding gates and print their details
-    foreach (BoardingGate gate in boardinggatesDict.Values)
+    foreach (BoardingGate gate in terminal.boardingGates.Values)
     {
         Console.WriteLine($"{gate.gateName,-16}{gate.supportsDDJB,-23}{gate.supportsCFFT,-23}{gate.supportsLWTT,-23}");
     }
@@ -158,7 +157,7 @@ void AssignBoardingGateToFlight()
         //Prompt user for flight number
         Console.WriteLine("Enter Flight Number: ");
         string flightNumber = Console.ReadLine().Trim();
-        if (!flightsDict.ContainsKey(flightNumber))
+        if (!terminal.flights.ContainsKey(flightNumber))
         {
             Console.WriteLine("Flight not found. Please enter a valid flight number.");
             continue;
@@ -166,11 +165,107 @@ void AssignBoardingGateToFlight()
         //Prompt user for Boarding Gate
         Console.WriteLine("Enter Boarding Gate Number: ");
         string gateNum = Console.ReadLine();
-        if (!boardinggatesDict.ContainsKey(gateNum))
+        if (!terminal.boardingGates.ContainsKey(gateNum))
         {
             Console.WriteLine("Boarding gate not found. Please enter a valid boarding gate number.");
             continue;
         }
+
+        //Check if the Flight exists
+
+        //Get the Flight object
+        Flight selectedFlight = terminal.flights[flightNumber];
+
+        //Determine the Special Request Code
+        string specialRequestCode;
+
+        if (selectedFlight is CFFTFlight)
+        {
+            specialRequestCode = "CFFT";
+        }
+        else if (selectedFlight is DDJBFlight)
+        {
+            specialRequestCode = "DDJB";
+        }
+        else if (selectedFlight is LWTTFlight)
+        {
+            specialRequestCode = "LWTT";
+        }
+        else
+        {
+            specialRequestCode = "None"; // Default for NORMFlight or other types
+        }
+
+
+        //Display basic information
+        Console.WriteLine($"Flight Number: {flightNumber}");
+        Console.WriteLine($"Origin: {selectedFlight.origin}");
+        Console.WriteLine($"Destination: {selectedFlight.destination}");
+        Console.WriteLine($"Expected Time: 18/1/2025 {selectedFlight.expectedTime:hh:mm:ss tt}");
+        Console.WriteLine($"Special Request Code: {specialRequestCode}");
+        Console.WriteLine($"Boarding Gate Name: {gateNum}");
+
+        
+
+        // Further steps for boarding gate validation and assignment...
+        if (!terminal.boardingGates.ContainsKey(gateNum))
+        {
+            Console.WriteLine("Boarding Gate not found. Please enter a valid gate number.");
+            continue;
+        }
+
+        //Get Boarding Gate object
+        BoardingGate gate = terminal.boardingGates[gateNum];
+
+        //Display Special Request Code
+        Console.WriteLine($"Supports DDJB: {gate.supportsDDJB}");
+        Console.WriteLine($"Supports CFFT: {gate.supportsCFFT}");
+        Console.WriteLine($"Supports LWTT: {gate.supportsLWTT}");
+
+        //if (gate.Flight != null)
+        //{
+        //    Console.WriteLine($"Boarding Gate {gateNum} is already assigned to Flight {gate.Flight.flightNumber}.");
+        //    continue;
+        //}
+
+        //Prompt the user if they would like to update the Status of the Flight
+        Console.WriteLine("Would you like to update the status of the flight? (Y/N)");
+        string choice = Console.ReadLine();
+
+        if (choice.ToUpper() == "Y")
+        {
+            Console.WriteLine("1. Delayed");
+            Console.WriteLine("2. Boarding");
+            Console.WriteLine("3. On Time");
+            Console.WriteLine("Please select the new status of the flight: ");
+
+            string newStatus = Console.ReadLine();
+
+            switch (newStatus)
+            {
+                case "1":
+                    selectedFlight.status = "Delayed";
+                    break;
+                case "2":
+                    selectedFlight.status = "Boarding";
+                    break;
+                case "3":
+                    selectedFlight.status = "On Time";
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Status remains unchanged.");
+                    continue;
+            }
+        }
+        else
+        {
+            break;
+        }
+
+        Console.WriteLine($"Flight {flightNumber} has been assigned to Boarding Gate {gateNum}!");
+        break;        
+    }
+}
 
         //Check if the Flight exists
 
