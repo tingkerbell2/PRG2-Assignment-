@@ -1,3 +1,8 @@
+	//==========================================================
+	// Student Number	: S10267822
+	// Student Name	: Lau Jia Qi
+	// Partner Name	: Ee Ting Li
+//==========================================================
 namespace S10267852_PRG2_Assignment
 {
     class BoardingGate
