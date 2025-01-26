@@ -614,7 +614,7 @@ while (true)
         }
         else if (option == 7)
         {
-        displayScheduledflights();
+            displayScheduledflights();
         }
         else if (option == 0)
         {
