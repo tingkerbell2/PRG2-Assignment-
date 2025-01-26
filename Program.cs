@@ -581,46 +581,48 @@ void displayScheduledflights() //Feature 9 (output different from answer)
 loadAirlines();
 loadBoardingGates();
 
+
 //While true loop (for future use)
 while (true)
-{
-   DisplayMenu();
-   int option = Convert.ToInt32(Console.ReadLine());
-   if (option == 1)
-   {
-      DisplayAllFlights();
-   }
+    {
+        displayMenu();
+        int option = Convert.ToInt32(Console.ReadLine());
+        if (option == 1)
+        {
+            DisplayAllFlights();
+        }
 
-   else if (option == 2)
-   {
-      ListBoardingGates();
-   }
-   else if (option == 3)
-   { 
-     AssignBoardingGateToFlight();
-   }
-   else if (option == 4)
-   {
-     CreateFlight();
-   }
-   else if (option == 5)
-   {
-        DisplayFlightDetails();
-   }
-    else if (option == 6)
-    {
-      ModifyFlightDetails();
+        else if (option == 2)
+        {
+            ListBoardingGates();
+        }
+        else if (option == 3)
+        {
+            AssignBoardingGateToFlight();
+        }
+        else if (option == 4)
+        {
+            CreateFLight();
+        }
+        else if (option == 5)
+        {
+            DisplayFlightDetails();
+        }
+        else if (option == 6)
+        {
+            ModifyFlightDetails();
+        }
+        else if (option == 7)
+        {
+        displayScheduledflights();
+        }
+        else if (option == 0)
+        {
+            Console.WriteLine("Goodbye!");
+            break;
+        }
+        else
+        {
+            Console.WriteLine("Invalid option. Please try again.");
+        }
     }
-    else if (option == 7)
-    {
-      //DisplayFlightSchedule();
-    }
-    else if (option == 0)
-    {
-        break;
-    }
-    else
-    {
-         Console.WriteLine("Invalid option. Please try again.");
-    }
-}
