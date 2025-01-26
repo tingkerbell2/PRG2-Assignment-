@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace S10267852_PRG2_Assignment
+namespace PRG2_Assignment
 {
     class Airline
     {
