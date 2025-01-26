@@ -547,7 +547,7 @@ void ModifyFlightDetails()
     Console.WriteLine($"Boarding Gate: {(boardinggatesDict.ContainsKey(flightNumber) ? boardinggatesDict[flightNumber].gateName : "Unassigned")}");
 }
 
-void displayScheduledflights() //Feature 9 (output different from answer)
+void displayScheduledflights()
 {
     Console.WriteLine("=============================================");
     Console.WriteLine("List of Flights in Chronological Order");
@@ -556,7 +556,7 @@ void displayScheduledflights() //Feature 9 (output different from answer)
                       "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time","Status","Boarding Gate");
 
     //Create a list of all flights from the dictionary
-    List<Flight> sortedFlights = new List<Flight>(flightsDict.Values);
+    List<Flight> sortedFlights = new List<Flight>(terminal.flights.Values);
 
     //Sort the list using IComparable interface implemented in the Flight class
     sortedFlights.Sort();
@@ -568,9 +568,9 @@ void displayScheduledflights() //Feature 9 (output different from answer)
         string airlineCode = flightNumParts[0];
 
         string airlineName = "";
-        if (airlinesDict.ContainsKey(airlineCode))
+        if (terminal.Airlines.ContainsKey(airlineCode))
         {
-            airlineName = airlinesDict[airlineCode].Name;
+            airlineName = terminal.Airlines[airlineCode].Name;
         }
         string expectedTimeInfo = flight.expectedTime.ToString("dd/MM/yyyy hh:mm:ss tt");
 
