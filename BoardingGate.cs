@@ -3,6 +3,17 @@
 	// Student Name	: Lau Jia Qi
 	// Partner Name	: Ee Ting Li
 //==========================================================
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 namespace PRG2_Assignment
 {
     class BoardingGate
