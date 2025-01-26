@@ -340,7 +340,7 @@ void CreateFLight()
 //Feature 7: Display full flight details from an airline (Completed)
 void DisplayFlightDetails() //feature 7
 {
-    // Step 1: List all the airlines available
+    // List all the airlines available
     Console.WriteLine("=============================================");
     Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
     Console.WriteLine("=============================================");
@@ -351,18 +351,18 @@ void DisplayFlightDetails() //feature 7
         Console.WriteLine($"{airline.Code,-16}{airline.Name,-23}");
     }
 
-    // Step 2: Prompt the user to enter the airline code
+    //Prompt the user to enter the airline code
     Console.Write("Enter Airline Code: ");
     string? airlineCode = Console.ReadLine()?.Trim();
 
-    // Step 3: Validate the airline code
+    //Validate the airline code
     if (!airlinesDict.ContainsKey(airlineCode))
     {
         Console.WriteLine("Invalid airline code. Please try again.");
         return;
     }
 
-    // Retrieve the airline object
+    //Retrieve the airline object
     Airline selectedAirline = airlinesDict[airlineCode];
 
     // Step 4: List all flights for the selected airline
