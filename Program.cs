@@ -1,7 +1,5 @@
 
-Dictionary<string, Flight> flightsDict = new Dictionary<string, Flight>();
-Dictionary<string,Airline> airlinesDict = new Dictionary<string,Airline>();
-Dictionary<string,BoardingGate> boardinggatesDict = new Dictionary<string,BoardingGate>();
+Terminal terminal = new Terminal("Changi Airport Terminal 5");
 
 //Display Menu (Completed)
 void displayMenu()
@@ -22,7 +20,7 @@ void displayMenu()
 }
 
 //Feature 1: Load Airline and Boarding Gate (Completed)
-void loadAirlines()
+void loadAirlines() 
 {
     using (StreamReader sr = new StreamReader("airlines.csv"))
     {
@@ -33,15 +31,16 @@ void loadAirlines()
             string[] data = line.Split(",");
             string airlineName = data[0];
             string airlineCode = data[1];
-
+            //create airline object
             Airline airline = new Airline(airlineName, airlineCode);
-            airlinesDict.Add(airlineCode, airline);
+            //add airline object
+            terminal.AddAirline(airline);
         }
         Console.WriteLine("Loading Airlines...");
-        Console.WriteLine($"{airlinesDict.Count()} Airlines Loaded!");
+        Console.WriteLine($"{terminal.Airlines.Count()} Airlines Loaded!");
     }
 }
-void loadBoardingGates()
+void loadBoardingGates() 
 {
     using (StreamReader sr = new StreamReader("boardinggates.csv"))
     {
@@ -50,19 +49,21 @@ void loadBoardingGates()
         while ((line = sr.ReadLine()) != null)
         {
             string[] data = line.Split(",");
-            string boardingGate = data[0];
+            string boardingGate = data[0].Trim();
             bool supportsDDJB = bool.Parse(data[1].Trim());
             bool supportsCFFT = bool.Parse(data[2].Trim());
             bool supportsLWTT = bool.Parse(data[3].Trim());
 
-            BoardingGate gate = new BoardingGate(boardingGate, supportsDDJB, supportsCFFT, supportsLWTT);
-            boardinggatesDict.Add(boardingGate,gate);
+            if (!terminal.boardingGates.ContainsKey(boardingGate))
+            {
+                BoardingGate gate = new BoardingGate(boardingGate, supportsDDJB, supportsCFFT, supportsLWTT);
+                terminal.AddBoardingGate(gate);
+            }
         }
         Console.WriteLine("Loading Boarding Gates...");
-        Console.WriteLine($"{boardinggatesDict.Count()} Boarding Gates Loaded!");
+        Console.WriteLine($"{terminal.boardingGates.Count()} Boarding Gates Loaded!");
     }
 }
-
 //Feature 2: Load Flight Data (Completed)
 void loadFlights()
 {
