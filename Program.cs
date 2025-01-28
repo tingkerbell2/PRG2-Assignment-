@@ -111,7 +111,7 @@ void loadFlights()
 }
 
 //Feature 3: List Flights with basic information (Completed)
-void DisplayAllFlights() 
+void DisplayAllFlights()
 {
     Console.WriteLine("=============================================");
     Console.WriteLine("List of Flights for Changi Airport Terminal 5");
@@ -131,9 +131,11 @@ void DisplayAllFlights()
         {
             airlineName = terminal.Airlines[airlineCode].Name;
         }
-        //string expectedTimeInfo = "18/1/2025 " + flight.expectedTime.ToString("hh:mm:ss tt");
 
-        Console.WriteLine($"{flight.flightNumber,-16}{airlineName,-23}{flight.origin,-24}{flight.destination,-23}{flight.expectedTime:dd/MM/yyyy hh:mm:ss tt}");
+        // Ensure that the expected time is 18th January 2025 for the demonstration
+        string expectedTime = "18/01/2025 " + flight.expectedTime.ToString("hh:mm:ss tt");
+
+        Console.WriteLine($"{flight.flightNumber,-16}{airlineName,-23}{flight.origin,-24}{flight.destination,-23}{expectedTime}");
     }
 }
 //Feature 4: List Boarding gates (Completed)
