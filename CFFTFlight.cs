@@ -11,32 +11,29 @@ using System.Threading.Tasks;
 
 namespace PRG2_Assignment
 {
-    public class CFFTFlight:Flight
+    public class CFFTFlight : Flight
     {
-        public double requestFee {  get; set; }
-        public CFFTFlight() { }
-        public CFFTFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string status)
-            : base(flightNumber, origin, destination, expectedTime, status)
-        {
-            requestFee = 150; // Fee for CFFT special request
-        }
-        public override double CalculateFees() 
-        {
-            double totalFee = 300; // base fee for boarding gate
-            if(origin == "Singapore (SIN)")
-            {
-                totalFee += 800; //Departing flight fee
-            }
-            if (destination == "Singapore (SIN)")
-            {
-                totalFee += 500; //arriving flight fee
-            }
-            totalFee += requestFee; 
-            return totalFee;
-        }
-        public override string ToString()
-        {
-            return $"\t{requestFee}";
-        }
+    // Properties
+    public double requestFee { get; set; }
+
+    // Constructor with BoardingGate support
+    public CFFTFlight(string flightNumber, string origin, string destination, DateTime expectedTime, string status, double requestFee, BoardingGate boardingGate = null)
+        : base(flightNumber, origin, destination, expectedTime, status, boardingGate)
+    {
+        this.requestFee = requestFee;
+    }
+
+    // Calculate Fees method
+    public override double CalculateFees()
+    {
+        double baseFee = 150;
+        return baseFee + requestFee;
+    }
+
+    // ToString() method
+    public override string ToString()
+    {
+        string gateInfo = this.boardingGate != null ? $"Assigned Gate: {this.boardingGate.gateName}" : "No Gate Assigned";
+        return base.ToString() + $", Request Fee: {requestFee}, {gateInfo}";
     }
 }
