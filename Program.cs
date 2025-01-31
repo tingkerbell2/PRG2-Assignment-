@@ -725,24 +725,30 @@ void ProcessUnassignedFlights()
     loadBoardingGates();
     loadFlights();
 
+    // Create a queue for unassigned flights and boarding gates
     Queue<Flight> unassignedFlights = new Queue<Flight>();
 
     // Identify unassigned flights
     foreach (var flight in terminal.flights.Values)
     {
-        if (flight.boardingGate == null)  // Check if flight has no assigned gate
+        // Check if flight has no assigned gate
+        if (flight.boardingGate == null)  
         {
+            // Add unassigned flights to the queue
             unassignedFlights.Enqueue(flight);
         }
     }
 
+    //Display the total number of unassigned flights
     Console.WriteLine($"Total Flights without Boarding Gates: {unassignedFlights.Count}");
 
     // Identify unassigned boarding gates
+    // Check if gate has no flight assigned
     List<BoardingGate> unassignedGates = terminal.boardingGates.Values
-        .Where(gate => gate.AssignedFlight == null)  // Check if gate has no flight assigned
+        .Where(gate => gate.AssignedFlight == null)  
         .ToList();
 
+    //Display the total number of unassigned boarding gates
     Console.WriteLine($"Total Boarding Gates without Flight Numbers: {unassignedGates.Count}");
 
     // Display flight details in a formatted table header
@@ -750,47 +756,42 @@ void ProcessUnassignedFlights()
     Console.WriteLine("| Flight Number      | Airline               | Origin             | Destination        | Expected Time         | Special Request  | Boarding Gate   |");
     Console.WriteLine("+--------------------+-----------------------+--------------------+--------------------+-----------------------+------------------+-----------------+");
 
-    // Process each flight
+    //Process each flight
     while (unassignedFlights.Count > 0)
     {
         Flight flight = unassignedFlights.Dequeue();
         BoardingGate assignedGate = null;
 
-        // Check if flight has a special request
-        if (flight is CFFTFlight)
+        // Find a suitable gate manually using a loop
+        foreach (var gate in unassignedGates)
         {
-            assignedGate = unassignedGates.FirstOrDefault(gate => gate.supportsCFFT);
-        }
-        else if (flight is DDJBFlight)
-        {
-            assignedGate = unassignedGates.FirstOrDefault(gate => gate.supportsDDJB);
-        }
-        else if (flight is LWTTFlight)
-        {
-            assignedGate = unassignedGates.FirstOrDefault(gate => gate.supportsLWTT);
+            if ((flight is CFFTFlight && gate.supportsCFFT) ||
+                (flight is DDJBFlight && gate.supportsDDJB) ||
+                (flight is LWTTFlight && gate.supportsLWTT))
+            {
+                assignedGate = gate;
+                break; // Stop searching once a match is found
+            }
         }
 
         // If no special request gate found, assign any available gate
-        if (assignedGate == null)
+        if (assignedGate == null && unassignedGates.Count > 0)
         {
-            assignedGate = unassignedGates.FirstOrDefault();
+            assignedGate = unassignedGates[0]; // Pick the first available gate
         }
 
         if (assignedGate != null)
         {
-            // Assign the gate to the flight
+            // Assign flight to gate and vice versa
             flight.boardingGate = assignedGate;
-            // Assign the flight to the gate
             assignedGate.AssignedFlight = flight;
-            // Remove the assigned gate from the list
             unassignedGates.Remove(assignedGate);
 
-            // Display the flight details in formatted manner
-            string specialRequest = !string.IsNullOrEmpty(flight.specialRequestCode) ? flight.specialRequestCode : "None";
-            string gateInfo = assignedGate != null ? assignedGate.gateName : "No Gate Assigned";
-            string airlineName = flight.airline?.Name ?? "N/A";  // Ensure the Airline name is properly set.
-
-            Console.WriteLine($"| {flight.flightNumber,-18} | {airlineName,-21} | {flight.origin,-18} | {flight.destination,-18} | {flight.expectedTime,-21} | {specialRequest,-16} | {gateInfo,-15} |");
+            // Display flight details
+            Console.WriteLine($"| {flight.flightNumber,-18} | {flight.airline?.Name ?? "N/A",-21} | " +
+                              $"{flight.origin,-18} | {flight.destination,-18} | {flight.expectedTime,-21} | " +
+                              $"{(string.IsNullOrEmpty(flight.specialRequestCode) ? "None" : flight.specialRequestCode),-16} | " +
+                              $"{assignedGate.gateName,-15} |");
         }
         else
         {
@@ -810,9 +811,11 @@ void ProcessUnassignedFlights()
     Console.WriteLine($"Total Flights processed: {totalFlightsProcessed}");
     Console.WriteLine($"Total Boarding Gates processed: {totalGatesProcessed}");
 
+    // Calculate processing percentages
     double flightProcessingPercentage = Math.Round((double)totalFlightsProcessed / terminal.flights.Count * 100, 2);
     double gateProcessingPercentage = Math.Round((double)totalGatesProcessed / terminal.boardingGates.Count * 100, 2);
 
+    // Display processing percentages
     Console.WriteLine($"Percentage of Flights automatically processed: {flightProcessingPercentage}%");
     Console.WriteLine($"Percentage of Gates automatically processed: {gateProcessingPercentage}%");
 }
