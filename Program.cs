@@ -970,7 +970,7 @@ void ProcessUnassignedFlights()
     Console.WriteLine($"Percentage of Flights automatically processed: {flightProcessingPercentage}%");
     Console.WriteLine($"Percentage of Gates automatically processed: {gateProcessingPercentage}%");
 }
-//Advance Feature
+//Advance Feature -(b)	Display the total fee per airline for the day
 void DisplayTotalFeesPerAirline()
 {
     // Step 1: Check if all flights have been assigned a boarding gate
