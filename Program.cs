@@ -634,10 +634,10 @@ void ModifyFlightDetails()
 void displayScheduledflights()
 {
     Console.WriteLine("=============================================");
-    Console.WriteLine("List of Flights in Chronological Order");
+    Console.WriteLine("Flight Schedule for Changi Airport Terminal 5");
     Console.WriteLine("=============================================");
-    Console.WriteLine("{0,-16}{1,-23}{2,-24}{3,-23}{4,-20}",
-                      "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time","Status","Boarding Gate");
+    Console.WriteLine("{0,-16}{1,-23}{2,-24}{3,-23}{4,-36}{5,-16}{6,-20}",
+                      "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time","Status","Boarding Gate","Status","Boarding Gate");
 
     //Create a list of all flights from the dictionary
     List<Flight> sortedFlights = new List<Flight>(terminal.flights.Values);
@@ -656,9 +656,19 @@ void displayScheduledflights()
         {
             airlineName = terminal.Airlines[airlineCode].Name;
         }
+        // Get assigned boarding gate
+        string boardingGate = "Unassigned";
+        foreach (var gate in terminal.boardingGates.Values)
+        {
+            if (gate.Flight != null && gate.Flight.flightNumber == flight.flightNumber)
+            {
+                boardingGate = gate.gateName;
+                break;
+            }
+        }
         string expectedTimeInfo = flight.expectedTime.ToString("dd/MM/yyyy hh:mm:ss tt");
 
-        Console.WriteLine($"{flight.flightNumber,-16} {airlineName,-23} {flight.origin,-24} {flight.destination,-23} {expectedTimeInfo,-20}");
+        Console.WriteLine($"{flight.flightNumber,-16}{airlineName,-23}{flight.origin,-24}{flight.destination,-23}{expectedTimeInfo,-36}{flight.status,-16}{boardingGate,-20}");
 
     }
 }
