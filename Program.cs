@@ -70,43 +70,113 @@ void loadBoardingGates()
     }
 }
 //Feature 2: Load Flight Data (Completed)
-void loadFlights() 
+void loadFlights()
 {
-    using (StreamReader sr = new StreamReader("flights.csv"))
+    string filePath = "flights.csv";
+
+    // Check if the file exists before proceeding
+    if (!File.Exists(filePath))
     {
-        string header = sr.ReadLine(); //skip header row
-        string line;
-
-        while ((line = sr.ReadLine()) != null)
+        Console.WriteLine($"Error: File '{filePath}' does not exist.");
+        return;
+    }
+    try
+    {
+        using (StreamReader sr = new StreamReader(filePath))
         {
-            string[] data = line.Split(',');
-            string flightNumber = data[0];
-            string origin = data[1];
-            string destination = data[2];
-            DateTime expectedTime = Convert.ToDateTime(data[3].Trim());
-            string specialRequestCode = data.Length > 4 ? data[4] : null; // Handle missing Special Request Code
+            string header = sr.ReadLine(); // Skip header row
+            string line;
 
-            Flight flight;
-
-            switch (specialRequestCode?.Trim())
+            while ((line = sr.ReadLine()) != null)
             {
-                case "CFFT":
-                    flight = new CFFTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 150);
-                    break;
-                case "DDJB":
-                    flight = new DDJBFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 300);
-                    break;
-                case "LWTT":
-                    flight = new LWTTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 500);
-                    break;
-                default:
-                    flight = new NORMFlight(flightNumber, origin, destination, expectedTime, "Scheduled");
-                    break;
+                string[] data = line.Split(',');
+
+                // Validate minimum required fields
+                if (data.Length < 4)
+                {
+                    Console.WriteLine("Error: Incomplete flight entry detected. Skipping...");
+                    continue;
+                }
+
+                string flightNumber = data[0].Trim();
+                string origin = data[1].Trim();
+                string destination = data[2].Trim();
+                string rawTime = data[3].Trim();
+                string specialRequestCode = data.Length > 4 ? data[4].Trim() : "None"; // Handle missing Special Request Code
+
+                // Validate flight number (non-empty)
+                if (string.IsNullOrWhiteSpace(flightNumber))
+                {
+                    Console.WriteLine("Error: Flight number is missing. Skipping entry...");
+                    continue;
+                }
+
+                // Validate origin and destination (non-empty)
+                if (string.IsNullOrWhiteSpace(origin) || string.IsNullOrWhiteSpace(destination))
+                {
+                    Console.WriteLine("Error: Origin or destination is missing. Skipping entry...");
+                    continue;
+                }
+
+                // Validate expected time
+                if (!DateTime.TryParse(rawTime, out DateTime expectedTime))
+                {
+                    Console.WriteLine($"Error: Invalid date format for flight '{flightNumber}'. Skipping entry...");
+                    continue;
+                }
+
+                Flight flight;
+
+                // Assign appropriate flight type based on special request code
+                switch (specialRequestCode)
+                {
+                    case "CFFT":
+                        flight = new CFFTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 150);
+                        break;
+                    case "DDJB":
+                        flight = new DDJBFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 300);
+                        break;
+                    case "LWTT":
+                        flight = new LWTTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 500);
+                        break;
+                    default:
+                        flight = new NORMFlight(flightNumber, origin, destination, expectedTime, "Scheduled");
+                        break;
+                }
+
+                // Assign the special request code to the flight
+                flight.specialRequestCode = specialRequestCode;
+
+                // Extract airline code from flight number
+                string[] flightNumberParts = flightNumber.Split(' ');
+                if (flightNumberParts.Length < 2)
+                {
+                    Console.WriteLine($"Error: Invalid flight number format '{flightNumber}'. Skipping entry...");
+                    continue;
+                }
+                string airlineCode = flightNumberParts[0];
+
+                // Validate and assign airline to the flight
+                if (terminal.Airlines.ContainsKey(airlineCode))
+                {
+                    Airline airline = terminal.Airlines[airlineCode];
+                    flight.airline = airline;
+                    airline.AddFlight(flight);
+                }
+                else
+                {
+                    Console.WriteLine($"Warning: Airline code '{airlineCode}' not recognized. Flight added without airline association.");
+                }
+                // Add flight to terminal
+                terminal.AddFlight(flight);
             }
-            terminal.AddFlight(flight);
+            Console.WriteLine("Loading Flights...");
+            Console.WriteLine($"{terminal.flights.Count()} Flights Loaded!");
         }
-        Console.WriteLine("Loading Flights...");
-        Console.WriteLine($"{terminal.flights.Count()} Flights Loaded!");
+    }
+    catch (Exception ex)
+    {        // Handle unexpected errors gracefully
+        Console.WriteLine($"Error: {ex.Message}");
     }
 }
 
