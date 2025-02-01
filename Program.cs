@@ -190,29 +190,55 @@ void loadFlights()
 //Feature 3: List Flights with basic information (Completed)
 void DisplayAllFlights()
 {
+    // Print header for the flight list
     Console.WriteLine("=============================================");
     Console.WriteLine("List of Flights for Changi Airport Terminal 5");
     Console.WriteLine("=============================================");
+
+    // Print column headers with proper formatting
     Console.WriteLine("{0,-16}{1,-23}{2,-24}{3,-23}{4,-20}",
                       "Flight Number", "Airline Name", "Origin", "Destination", "Expected Departure/Arrival Time");
 
+    // Check if there are any flights in the terminal
+    if (terminal.flights.Count == 0)
+    {
+        // Display message if no flights are found
+        Console.WriteLine("No flights available.");
+        return;
+    }
+
+    // Loop through each flight in the terminal
     foreach (Flight flight in terminal.flights.Values)
     {
-        string[] flightNumParts = flight.flightNumber.Split(" ");
-        string airlineCode = flightNumParts[0];
-
-        // Initialize airlineName to "" as a default value
-        string airlineName = "";
-
-        if (terminal.Airlines.ContainsKey(airlineCode))
+        try
         {
-            airlineName = terminal.Airlines[airlineCode].Name;
+            // Extract airline code from flight number by splitting it at spaces
+            string[] flightNumParts = flight.flightNumber.Split(" ");
+            string airlineCode = flightNumParts.Length > 0 ? flightNumParts[0] : "Unknown";
+
+            // Initialize airline name with a default value
+            string airlineName = "Unknown";
+
+            // Check if the airline code exists in the terminal's airline records
+            if (terminal.Airlines.ContainsKey(airlineCode))
+            {
+                // Retrieve the airline name from the dictionary
+                airlineName = terminal.Airlines[airlineCode].Name;
+            }
+            else
+            {
+                // Display a warning if the airline code is not recognized
+                Console.WriteLine($"Warning: Airline code '{airlineCode}' not recognized for flight '{flight.flightNumber}'.");
+            }
+
+            // Print the formatted flight details
+            Console.WriteLine($"{flight.flightNumber,-16}{airlineName,-23}{flight.origin,-24}{flight.destination,-23}{flight.expectedTime:dd/MM/yyyy hh:mm:ss tt}");
         }
-
-        // Ensure that the expected time is 18th January 2025 for the demonstration
-        string expectedTime = "18/01/2025 " + flight.expectedTime.ToString("hh:mm:ss tt");
-
-        Console.WriteLine($"{flight.flightNumber,-16}{airlineName,-23}{flight.origin,-24}{flight.destination,-23}{expectedTime}");
+        catch (Exception ex)
+        {
+            // Handle any errors that occur while processing the flight details
+            Console.WriteLine($"Error displaying flight '{flight.flightNumber}': {ex.Message}");
+        }
     }
 }
 //Feature 4: List Boarding gates (Completed)
