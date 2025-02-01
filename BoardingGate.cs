@@ -18,23 +18,32 @@ namespace PRG2_Assignment
 {
     class BoardingGate
     {
-        //Properties
+                //Properties
         public string gateName { get; set; }
         public bool supportsCFFT { get; set; }
         public bool supportsDDJB { get; set; }
         public bool supportsLWTT { get; set; }
         public Flight Flight { get; set; }
 
+        //Added for advanced feature - track assigned flight
+        public Flight AssignedFlight { get; set; }
+
         //Default Constructor
-        public BoardingGate() { }
+        public BoardingGate()
+        {
+            //Added for advanced feature
+            AssignedFlight = null;
+        }
 
         //Parameterized Constructor
-        public BoardingGate(string GateName, bool SupportsCFFT, bool SupportsDDJB, bool SupportsLWTT)
+        public BoardingGate(string GateName, bool SupportsDDJB, bool SupportsCFFT, bool SupportsLWTT)
         {
             gateName = GateName;
-            supportsCFFT = SupportsCFFT;
             supportsDDJB = SupportsDDJB;
+            supportsCFFT = SupportsCFFT;
             supportsLWTT = SupportsLWTT;
+            this.AssignedFlight = null; // Added for advanced feature
+
         }
 
         //Methods
@@ -49,10 +58,21 @@ namespace PRG2_Assignment
             return baseFee;
         }
 
-        //TOString() method
+        // Advanced Feature: Method to check if gate supports a special request
+        public bool SupportsSpecialRequest(string specialRequest)
+        {
+            return specialRequest switch
+            {
+                "DDJB" => supportsDDJB,
+                "CFFT" => supportsCFFT,
+                "LWTT" => supportsLWTT,
+                _ => false,
+            };
+        }
+        //ToString() method
         public override string ToString()
         {
-            return $"Gate Name: {gateName}\nSupports CFFT: {supportsCFFT}\nSupports DDJB: {supportsDDJB}\nSupports LWTT: {supportsLWTT}\nFlight: {Flight}";
+            return $"Gate Name: {gateName}\nSupports DDJB: {supportsDDJB}\nSupports CFFT: {supportsCFFT}\nSupports LWTT: {supportsLWTT}\nFlight: {Flight}";
         }
     }
 }
