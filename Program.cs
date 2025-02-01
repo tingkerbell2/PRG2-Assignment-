@@ -665,56 +665,53 @@ void displayScheduledflights()
 loadAirlines();
 loadBoardingGates();
 
-while (true)
+void Main()
 {
-    displayMenu();
-    int option = Convert.ToInt32(Console.ReadLine());
-    if (option == 1)
+    while (true)
     {
-        DisplayAllFlights();
-    }
-
-    else if (option == 2)
-    {
-        ListBoardingGates();
-    }
-    else if (option == 3)
-    {
-        AssignBoardingGateToFlight();
-    }
-    else if (option == 4)
-    {
-        CreateFLight();
-    }
-    else if (option == 5)
-    {
-        DisplayFlightDetails();
-    }
-    else if (option == 6)
-    {
-        ModifyFlightDetails();
-    }
-    else if (option == 7)
-    {
-        displayScheduledflights();
-    }
-    else if (option == 8)
-    {
-        ProcessUnassignedFlights();
-    }
-    else if (option == 9)
-    {
-        //TotalFees();
-    }
-    else if (option == 0)
-    {
-        Console.WriteLine("Goodbye!");
-        break;
-    }
-    else
-    {
-        //Error Message for invalid option
-        Console.WriteLine("Invalid option. Please try again.");
+        displayMenu();
+        string option = Console.ReadLine();
+        if (option == "1")
+        {
+            DisplayAllFlights();
+        }
+        else if (option == "2")
+        {
+            ListBoardingGates ();
+        }
+        else if (option == "3")
+        {
+            AssignBoardingGateToFlight ();
+        }
+        else if (option == "4")
+        {
+            CreateFLight();
+        }
+        else if (option == "5")
+        {
+            DisplayFlightDetails();
+        }
+        else if(option == "6")
+        {
+            ModifyFlightDetails();
+        }
+        else if (option == "7")
+        {
+            displayScheduledflights();
+        }
+        else if (option == "8")
+        {
+            ProcessUnassignedFlights():
+        }
+        else if (option == "0")
+        {
+            Console.WriteLine("Goodbye!");
+            break;
+        }
+        else
+        {
+            Console.WriteLine("Invalid option. Please try again.");
+        }
     }
 }
 
