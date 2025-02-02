@@ -1056,125 +1056,131 @@ void ProcessUnassignedFlights()
 
 
 //Advanced feature (b) - Display Total Fees Per Airline
-void DisplayTotalFeesPerAirline()
+void CalculateTotalFeesPerAirline()
 {
-    // Step 1: Check if all flights have been assigned a boarding gate
-    if (terminal.flights == null || terminal.flights.Count == 0)
+    // Ensure all flights have an assigned boarding gate
+    if (terminal.flights.Values.Any(flight => flight.boardingGate == null))
     {
-        // If no flights are available, notify the user and exit
-        Console.WriteLine("No flights available in the terminal.");
+        Console.WriteLine("Not all flights have been assigned boarding gates. Please assign all flights before running this feature again.");
         return;
     }
 
-    // Check if any flight does not have an assigned boarding gate
-    bool unassignedFlightsExist = terminal.flights.Values.Any(f => f.boardingGate == null);
-    if (unassignedFlightsExist)
+    // Dictionary to store total fees and discounts per airline
+    Dictionary<string, double> totalFeesByAirline = new Dictionary<string, double>();
+    Dictionary<string, double> totalDiscountsByAirline = new Dictionary<string, double>();
+
+    foreach (var flight in terminal.flights.Values)
     {
-        // Warn the user about unassigned gates and exit
-        Console.WriteLine("Warning: Some flights have not been assigned a boarding gate. Please assign all gates before proceeding.");
-        return;
-    }
+        // Extract airline code from the flight number
+        string airlineCode = flight.flightNumber.Split(' ')[0];
 
-    // Display header for the report
-    Console.WriteLine("=================================");
-    Console.WriteLine(" Total Fees Per Airline for Today");
-    Console.WriteLine("=================================");
+        // Base boarding gate fee
+        double flightFee = 300;
 
-    double totalFeesCollected = 0; // Stores total collected fees
-    double totalDiscountsApplied = 0; // Stores total applied discounts
-
-    // Step 2: Compute fees for each airline
-    if (terminal.Airlines == null || terminal.Airlines.Count == 0)
-    {
-        // If no airlines are available, notify the user and exit
-        Console.WriteLine("No airlines found in the terminal.");
-        return;
-    }
-
-    // Iterate over each airline
-    foreach (var airline in terminal.Airlines.Values)
-    {
-        // Check if the airline or its flights are null or empty
-        if (airline == null || airline.flights == null || airline.flights.Count == 0)
+        // Additional fees based on origin and destination
+        if (flight.origin == "Singapore (SIN)")
         {
-            Console.WriteLine($"Airline: {airline?.Name ?? "Unknown"} ({airline?.Code ?? "N/A"}) - No flights available.");
-            continue;
+            flightFee += 800;
         }
 
-        double airlineTotalFees = 0; // Stores total fees for this airline
-        double airlineTotalDiscounts = 0; // Stores total discounts for this airline
-        int qualifyingFlights = 0; // Tracks the number of flights processed
-
-        // Iterate over each flight in the airline
-        foreach (var flight in airline.flights.Values)
+        if (flight.destination == "Singapore (SIN)")
         {
-            if (flight == null || string.IsNullOrWhiteSpace(flight.flightNumber))
-            {
-                // Skip invalid flights
-                Console.WriteLine("Invalid flight detected. Skipping...");
-                continue;
-            }
-
-            double flightFee = 300; // Base boarding gate fee for all flights
-
-            // Apply origin/destination fees
-            if (!string.IsNullOrEmpty(flight.origin) && flight.origin == "SIN")
-                flightFee += 800; // Additional fee if departing from SIN
-            if (!string.IsNullOrEmpty(flight.destination) && flight.destination == "SIN")
-                flightFee += 500; // Additional fee if arriving at SIN
-
-            // Apply special request fees based on flight type
-            if (flight is CFFTFlight cfftFlight)
-                flightFee += cfftFlight.requestFee;
-            else if (flight is DDJBFlight ddjbFlight)
-                flightFee += ddjbFlight.requestFee;
-            else if (flight is LWTTFlight lwttFlight)
-                flightFee += lwttFlight.requestFee;
-
-            airlineTotalFees += flightFee; // Add to total airline fees
-            qualifyingFlights++; // Increment flight count
-
-            // Step 3: Apply promotional discounts
-            if (qualifyingFlights % 3 == 0) // Discount every 3 flights
-                airlineTotalDiscounts += 700;
-
-            // Apply time-based discount for flights before 11 AM or after 9 PM
-            if (flight.expectedTime != DateTime.MinValue && (flight.expectedTime.Hour < 11 || flight.expectedTime.Hour > 21))
-                airlineTotalDiscounts += 110;
-
-            // Apply location-based discount for flights from specific origins
-            if (!string.IsNullOrEmpty(flight.origin) && (flight.origin == "DXB" || flight.origin == "BKK" || flight.origin == "NRT"))
-                airlineTotalDiscounts += 25;
-
-            // Apply discount if no special request is made
-            if (string.IsNullOrEmpty(flight.specialRequestCode))
-                airlineTotalDiscounts += 50;
+            flightFee += 500;
         }
 
-        // Apply an additional airline-level discount for airlines with more than 5 flights
-        if (qualifyingFlights > 5)
-            airlineTotalDiscounts += airlineTotalFees * 0.03;
+        // Add special request fee if applicable
+        if (flight is DDJBFlight ddjbFlight)
+        {
+            flightFee += ddjbFlight.requestFee;
+        }
+        else if (flight is CFFTFlight cfftFlight)
+        {
+            flightFee += cfftFlight.requestFee;
+        }
+        else if (flight is LWTTFlight lwttFlight)
+        {
+            flightFee += lwttFlight.requestFee;
+        }
 
-        double airlineFinalFee = airlineTotalFees - airlineTotalDiscounts; // Calculate final fees
-        totalFeesCollected += airlineFinalFee; // Add to total collected fees
-        totalDiscountsApplied += airlineTotalDiscounts; // Add to total applied discounts
+        // Initialize airline fee tracking if not already present
+        if (!totalFeesByAirline.ContainsKey(airlineCode))
+        {
+            totalFeesByAirline[airlineCode] = 0;
+            totalDiscountsByAirline[airlineCode] = 0;
+        }
 
-        // Step 4: Display breakdown per airline
-        Console.WriteLine($"Airline: {airline.Name} ({airline.Code})");
-        Console.WriteLine($"Total Flights Processed: {qualifyingFlights}");
-        Console.WriteLine($"Subtotal Fees: ${airlineTotalFees:F2}");
-        Console.WriteLine($"Discounts Applied: -${airlineTotalDiscounts:F2}");
-        Console.WriteLine($"Final Total Fees: ${airlineFinalFee:F2}");
-        Console.WriteLine("---------------------------------");
+        // Add flight fee to the airline's total fees
+        totalFeesByAirline[airlineCode] += flightFee;
+
+        // Apply eligible discounts
+        double discountAmount = 0;
+
+        // Off-peak flight discount ($110)
+        if (flight.expectedTime.Hour < 11 || flight.expectedTime.Hour >= 21)
+        {
+            discountAmount += 110;
+        }
+
+        // Specific origin discount ($25)
+        if (flight.origin == "Dubai (DXB)" || flight.origin == "Bangkok (BKK)" || flight.origin == "Tokyo (NRT)")
+        {
+            discountAmount += 25;
+        }
+
+        // Discount for flights with no special request code ($50)
+        if (!(flight is DDJBFlight || flight is CFFTFlight || flight is LWTTFlight))
+        {
+            discountAmount += 50;
+        }
+
+        // Add the calculated discount to the airline's total discounts
+        totalDiscountsByAirline[airlineCode] += discountAmount;
     }
 
-    // Step 5: Display summary of total fees collected
-    double discountPercentage = (totalDiscountsApplied / (totalFeesCollected + totalDiscountsApplied)) * 100;
-    Console.WriteLine("=================================");
-    Console.WriteLine(" Summary of Fees for Terminal 5 ");
-    Console.WriteLine("=================================");
-    Console.WriteLine($"Total Airline Fees: ${totalFeesCollected:F2}");
-    Console.WriteLine($"Total Discounts Applied: -${totalDiscountsApplied:F2}");
-    Console.WriteLine($"Final Total Fees Collected: ${totalFeesCollected - totalDiscountsApplied:F2}");
-    Console.WriteLine($"Discount Percentage: {discountPercentage:F2}%");
+    // Apply bulk discounts based on flight count
+    foreach (var airlineCode in totalFeesByAirline.Keys.ToList())
+    {
+        int airlineFlightCount = terminal.flights.Values.Count(flight => flight.flightNumber.StartsWith(airlineCode));
+
+        // Discount of $350 for every 3 flights
+        totalDiscountsByAirline[airlineCode] += (airlineFlightCount / 3) * 350;
+
+        // Additional 3% discount for airlines with more than 5 flights
+        if (airlineFlightCount > 5)
+        {
+            totalDiscountsByAirline[airlineCode] += totalFeesByAirline[airlineCode] * 0.03;
+        }
+    }
+
+    // Display results
+    double grandTotalFees = 0;
+    double grandTotalDiscounts = 0;
+    double finalCollectedAmount = 0;
+
+    Console.WriteLine("{0,-20} {1,-30} {2,-20} {3,-20}", "Airline", "Total Fees", "Discounts", "Final Amount");
+
+    foreach (var airlineCode in totalFeesByAirline.Keys)
+    {
+        double finalAirlineFee = totalFeesByAirline[airlineCode] - totalDiscountsByAirline[airlineCode];
+
+        Console.WriteLine("{0,-20} {1,-30:F2} {2,-20:F2} {3,-20:F2}",
+                          airlineCode,
+                          totalFeesByAirline[airlineCode],
+                          totalDiscountsByAirline[airlineCode],
+                          finalAirlineFee);
+
+        grandTotalFees += totalFeesByAirline[airlineCode];
+        grandTotalDiscounts += totalDiscountsByAirline[airlineCode];
+        finalCollectedAmount += finalAirlineFee;
+    }
+
+    // Calculate the percentage of discounts over total fees
+    double discountPercentage = (grandTotalDiscounts / grandTotalFees) * 100;
+
+    Console.WriteLine("\nTotal Fees Collected: {0:F2}", grandTotalFees);
+    Console.WriteLine("Total Discounts Given: {0:F2}", grandTotalDiscounts);
+    Console.WriteLine("Final Collected Fees: {0:F2}", finalCollectedAmount);
+    Console.WriteLine("Overall Discount Percentage: {0:F2}%", discountPercentage);
 }
+
+
