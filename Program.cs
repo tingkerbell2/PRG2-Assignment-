@@ -987,24 +987,31 @@ void ProcessUnassignedFlights()
     loadBoardingGates();
     loadFlights();
 
+    //Create a queue to store unassigned flights
     Queue<Flight> unassignedFlights = new Queue<Flight>();
 
     // Identify unassigned flights
     foreach (var flight in terminal.flights.Values)
     {
-        if (flight.boardingGate == null)  // Check if flight has no assigned gate
+        // Check if flight has no assigned gate
+        if (flight.boardingGate == null)  
         {
+            // Add unassigned flights to the queue
             unassignedFlights.Enqueue(flight);
         }
     }
 
+    // Display total unassigned flights
     Console.WriteLine($"Total Flights without Boarding Gates: {unassignedFlights.Count}");
 
     // Identify unassigned boarding gates
+    // List for unassigned gates
+    // LINQ method allows developers to write queries directly to manipulate and retrieve data
     List<BoardingGate> unassignedGates = terminal.boardingGates.Values
         .Where(gate => gate.AssignedFlight == null)  // Check if gate has no flight assigned
         .ToList();
 
+    // Display total unassigned boarding gates
     Console.WriteLine($"Total Boarding Gates without Flight Numbers: {unassignedGates.Count}");
 
     // Display flight details in a formatted table header
@@ -1015,12 +1022,17 @@ void ProcessUnassignedFlights()
     // Process each flight
     while (unassignedFlights.Count > 0)
     {
+        // Dequeue the next unassigned flight
         Flight flight = unassignedFlights.Dequeue();
         BoardingGate assignedGate = null;
 
         // Check if flight has a special request
         if (flight is CFFTFlight)
         {
+
+            // FirstOrDefault is part of the LINQ method in C# and returns the first element of the sequence that satisfies a condition or a default value if no such element is found.
+            // gate => gate.supportsCFFT is a lambda expression /condition that checks if the gate supports CFFT
+            // Find a gate that supports CFFT
             assignedGate = unassignedGates.FirstOrDefault(gate => gate.supportsCFFT);
         }
         else if (flight is DDJBFlight)
@@ -1048,14 +1060,22 @@ void ProcessUnassignedFlights()
             unassignedGates.Remove(assignedGate);
 
             // Display the flight details in formatted manner
+            // ? is a short form for if else statement
+            // Use the ? to assign a value to the specialRequest variable 
+            // IsNullOrEmpty is a method that returns true if the string is null or empty, and false otherwise
             string specialRequest = !string.IsNullOrEmpty(flight.specialRequestCode) ? flight.specialRequestCode : "None";
+            // If the condition assignedGate is false, no gate assigned is assigned to the gateinfo variable
             string gateInfo = assignedGate != null ? assignedGate.gateName : "No Gate Assigned";
-            string airlineName = flight.airline?.Name ?? "N/A";  // Ensure the Airline name is properly set.
+            // Ensure the Airline name is properly set
+            // Eg if the object is set to SG airlines, then it will be sg airlines
+            // If the object is null, the airline name will be NA
+            string airlineName = flight.airline?.Name ?? "N/A";  
 
             Console.WriteLine($"| {flight.flightNumber,-18} | {airlineName,-21} | {flight.origin,-18} | {flight.destination,-18} | {flight.expectedTime,-21} | {specialRequest,-16} | {gateInfo,-15} |");
         }
         else
         {
+            // Display message if no available gate is found
             Console.WriteLine($"No available gate for Flight {flight.flightNumber}");
         }
     }
@@ -1067,12 +1087,15 @@ void ProcessUnassignedFlights()
     int totalFlightsProcessed = terminal.flights.Count(f => f.Value.boardingGate != null);
     int totalGatesProcessed = terminal.boardingGates.Count(g => g.Value.AssignedFlight != null);
 
+    // Display total flights and gates processed
     Console.WriteLine($"Total Flights processed: {totalFlightsProcessed}");
     Console.WriteLine($"Total Boarding Gates processed: {totalGatesProcessed}");
 
+    // Calculate processing percentages
     double flightProcessingPercentage = Math.Round((double)totalFlightsProcessed / terminal.flights.Count * 100, 2);
     double gateProcessingPercentage = Math.Round((double)totalGatesProcessed / terminal.boardingGates.Count * 100, 2);
 
+    // Display processing percentages
     Console.WriteLine($"Percentage of Flights automatically processed: {flightProcessingPercentage}%");
     Console.WriteLine($"Percentage of Gates automatically processed: {gateProcessingPercentage}%");
 }
