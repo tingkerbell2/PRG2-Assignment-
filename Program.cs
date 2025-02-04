@@ -630,7 +630,7 @@ void ModifyFlightDetails()
     Console.WriteLine("Enter Airline Code: ");
     string? airlineCode = Console.ReadLine().Trim().ToUpper();
 
-    // Validate airline code
+    // Validate airline code - check if it is empty or not found in the dictionary
     if (string.IsNullOrEmpty(airlineCode) || !terminal.Airlines.ContainsKey(airlineCode))
     {
         Console.WriteLine("Invalid airline code. Please try again.");
@@ -649,6 +649,7 @@ void ModifyFlightDetails()
     foreach (Flight flight in terminal.flights.Values)
     {
         // Filter flights based on the airline code using StartsWith method
+        // StartsWith method checks if the flight number starts with the airline code
         if (flight.flightNumber.StartsWith(airlineCode))
         {
             Console.WriteLine("{0,-16}{1,-23}{2,-23}{3,-23}{4,-30}",
@@ -683,7 +684,7 @@ void ModifyFlightDetails()
     // Read user input
     string option = Console.ReadLine().Trim();
 
-    //If the user chooses to modify the flight
+    //If the user chooses to modify the basic information of the flight
     if (option == "1")
     {
         //Display the options for modification - user can choose what to modify
@@ -695,7 +696,7 @@ void ModifyFlightDetails()
         Console.WriteLine("Choose an option: ");
         string modifyOption = Console.ReadLine();
 
-        // Perform the selected modification
+        // Perform the selected modification - modify basic information
         if (modifyOption == "1")
         {
             // Modify basic information
@@ -712,7 +713,8 @@ void ModifyFlightDetails()
             string expectedTimeInput = Console.ReadLine().Trim();
 
             // Validate and parse the expected time
-            // TryParse converts string (expectedTimeInput) to Datatime object
+            // TryParse converts string (expectedTimeInput) to Datetime object
+            // if successful, it stores the parsed value in expectedTime
             if (DateTime.TryParse(expectedTimeInput, out DateTime expectedTime))
             {
                 // Update the expected time
@@ -741,63 +743,81 @@ void ModifyFlightDetails()
             else if (status == "3")
                 selectedFlight.status = "On Time";
         }
+        //If the user chooses to modify the special request code
         else if (modifyOption == "3")
         {
             // Modify special request code
             Console.Write("Enter Special Request Code (CFFT/DDJB/LWTT/None): ");
+            // Read user input and convert to uppercase
             string newCode = Console.ReadLine().Trim().ToUpper();
 
             if (newCode == "CFFT")
+                // Create a new CFFTFlight object with updated special request code
                 terminal.flights[flightNumber] = new CFFTFlight(selectedFlight.flightNumber, selectedFlight.origin, selectedFlight.destination, selectedFlight.expectedTime, selectedFlight.status, 150);
             else if (newCode == "DDJB")
+                // Create a new DDJBFlight object with updated special request code
                 terminal.flights[flightNumber] = new DDJBFlight(selectedFlight.flightNumber, selectedFlight.origin, selectedFlight.destination, selectedFlight.expectedTime, selectedFlight.status, 300);
             else if (newCode == "LWTT")
+                // Create a new LWTTFlight object with updated special request code
                 terminal.flights[flightNumber] = new LWTTFlight(selectedFlight.flightNumber, selectedFlight.origin, selectedFlight.destination, selectedFlight.expectedTime, selectedFlight.status, 500);
             else if (newCode == "NONE")
+                // Create a new NORMFlight object with updated special request code
                 terminal.flights[flightNumber] = new NORMFlight(selectedFlight.flightNumber, selectedFlight.origin, selectedFlight.destination, selectedFlight.expectedTime, selectedFlight.status);
             else
+                // Display error message for invalid special request code
                 Console.WriteLine("Invalid Special Request Code.");
         }
+        //If the user chooses to modify the boarding gate
         else if (modifyOption == "4")
         {
             // Modify boarding gate
             Console.Write("Enter new Boarding Gate: ");
             string newGate = Console.ReadLine().Trim();
 
+            // Check if the boarding gate exists in the terminal
             if (terminal.boardingGates.ContainsKey(newGate))
             {
+                // Update the boarding gate for the flight
                 terminal.boardingGates[newGate].Flight = selectedFlight;
                 Console.WriteLine($"Boarding Gate updated to {newGate}");
             }
             else
             {
+                // Display error message for invalid boarding gate
                 Console.WriteLine("Invalid Boarding Gate.");
             }
         }
         else
         {
+            // Display error message for invalid modification choice - no such option
             Console.WriteLine("Invalid modification choice.");
         }
-        //Console.WriteLine("Flight updated!");
     }
     else if (option == "2")
     {
         // Delete flight
         Console.WriteLine("Are you sure you want to delete this flight? (Y/N): ");
+        // Read user input and convert to uppercase
         string deleteChoice = Console.ReadLine().Trim().ToUpper();
+        // Check user confirmation for deletion - Yes
         if (deleteChoice == "Y")
         {
+            // Remove the flight from the terminal's dictionary
             terminal.flights.Remove(flightNumber);
+            // Display success message for flight deletion
             Console.WriteLine($"Flight number {flightNumber} has been successfully removed.");
             return;
         }
+        // Check user confirmation for deletion - No
         else if (deleteChoice == "N")
         {
+            // Display cancellation message for flight deletion
             Console.WriteLine("Deletion Cancelled.");
             return;
         }
         else
         {
+            // Display error message for invalid choice
             Console.WriteLine("Invalid option.");
         }
     }
@@ -826,8 +846,11 @@ void ModifyFlightDetails()
     else
         Console.WriteLine("Special Request Code: None");
 
+    // Display boarding gate information
+    // This is a short form if else statement: if it contains the flight number, then display the gate name, else display unassigned
     Console.WriteLine($"Boarding Gate: {(terminal.boardingGates.ContainsKey(flightNumber) ? terminal.boardingGates[flightNumber].gateName : "Unassigned")}");
 }
+
 
 
 //Feature 9 - option 7
